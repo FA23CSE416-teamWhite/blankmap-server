@@ -4,7 +4,7 @@ const cors = require('cors');
 const path = require('path')
 const PORT = process.env.PORT || 8000;
 const app = express();
-const User = require('./models/user').default;
+const User = require('./models/user');
 require('./db/database');
 
 // app.use(bodyParser.json());
