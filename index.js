@@ -17,6 +17,13 @@ app.use(express.json());
 app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);
 });
+process.on("SIGINT", () => {
+    mongoose.connection.close(() => {
+      console.log("Server closed. Database instance disconnected.");
+      process.exit(0);
+    });
+  });
+  
 app.post('/api/users', async (req, res) => {
     const { name, email } = req.body;
     console.log(req.body);
@@ -45,3 +52,13 @@ app.get('/api/users', (req, res) => {
         .then(users => res.json(users))
         .catch(err => console.log(err))
 })
+
+app.get('/hello', (req, res) => {
+    res.send('Hello World!');
+  });
+
+app.put('/put', (req, res) => {
+    res.send('put hear!');
+});
+  
+module.exports = app;

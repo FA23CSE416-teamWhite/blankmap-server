@@ -20,5 +20,9 @@
     "express": "^4.18.2",
     "mongoose": "^8.0.0"
   },
-  "proxy": "http://localhost:8000"
+  "proxy": "http://localhost:8000",
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3"
+  }
 }
