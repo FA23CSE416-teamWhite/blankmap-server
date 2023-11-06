@@ -14,13 +14,16 @@ app.use(cors({
     credentials: true
   }));
 app.use(express.json());
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);
 });
 process.on("SIGINT", () => {
     mongoose.connection.close(() => {
       console.log("Server closed. Database instance disconnected.");
-      process.exit(0);
+      server.close(() => {
+        console.log("Server closed.");
+        process.exit(0);
+      });
     });
   });
   

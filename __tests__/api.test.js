@@ -29,8 +29,8 @@ describe('PUT Tests', () => {
     expect(res.statusCode).toEqual(200);
     expect(res.text).toEqual('put hear!');
   });
+});
 // Close the database connection after all tests have run
 afterAll(async () => {
   await mongoose.connection.close();
-});
 });
