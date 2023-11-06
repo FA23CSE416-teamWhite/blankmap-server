@@ -57,7 +57,7 @@ app.get('/api/users', (req, res) => {
 })
 
 app.get('/hello', (req, res) => {
-    res.send('Hello World!');
+    res.send('Hello World CSE416!');
   });
 
 app.put('/put', (req, res) => {
