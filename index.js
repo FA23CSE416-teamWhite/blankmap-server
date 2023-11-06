@@ -40,4 +40,8 @@ app.post('/api/users', async (req, res) => {
             });
         });
 });
-
+app.get('/api/users', (req, res) => {
+    User.find()
+        .then(users => res.json(users))
+        .catch(err => console.log(err))
+})
