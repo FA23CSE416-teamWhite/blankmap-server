@@ -30,14 +30,11 @@ process.on("SIGINT", () => {
 app.post('/api/users', async (req, res) => {
     const { name, email } = req.body;
     console.log(req.body);
-    const newUser = new User({
-        name: name,
-        email: email
-    });
+    const newUser = new User(req.body);
 
     newUser.save()
         .then(() => {
-            console.log("Account created successfully");
+            console.log("Account created successfully", newUser);
             res.json({
                 message: "Created account successfully"
             });
@@ -51,9 +48,26 @@ app.post('/api/users', async (req, res) => {
         });
 });
 app.get('/api/users', (req, res) => {
-    User.find()
-        .then(users => res.json(users))
+    User.findOne(req.query)
+        .then((found) => {
+            if(found){
+              res.send(found);
+            }else{
+              res.json({
+                success: false,
+                error: "No document found"
+              }, 400)
+            }
+        }
+      )
         .catch(err => console.log(err))
+})
+
+app.put('/api/users', (req, res) => {
+  console.log(req)
+  User.updateOne(req.query,req.body)
+      .then(res.send("success"))
+      .catch(err => console.log(err))
 })
 
 app.get('/hello', (req, res) => {
