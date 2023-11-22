@@ -213,18 +213,23 @@ const mapsData = [
 // Endpoint to fetch maps with a query parameter
 router.get('/maps', (req, res) => {
     const { q } = req.query;
-
+    console.log('q:', q);
+    const qExtract = q.replace(/^"(.*)"$/, '$1');
+    console.log('q:', qExtract);
+    console.log('q.trim():', qExtract.trim());
+    console.log(qExtract.trim().length)
     try {
         // If q is null or empty, return all maps
-        if (!q || q.trim() === '') {
+        if (qExtract === null || qExtract === undefined || qExtract.trim() === "") {
             res.json(mapsData);
+            console.log('No search query');
         } else {
             // Perform a case-insensitive search on the title and description fields
             const filteredMaps = mapsData.filter((map) => (
-                map.title.toLowerCase().includes(q.toLowerCase()) ||
-                map.description.toLowerCase().includes(q.toLowerCase())
+                map.title.toLowerCase().includes(qExtract.toLowerCase()) ||
+                map.description.toLowerCase().includes(qExtract.toLowerCase())
             ));
-
+            console.log('Search query:', qExtract);
             res.json(filteredMaps);
         }
     } catch (error) {
@@ -232,5 +237,4 @@ router.get('/maps', (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
-
 module.exports = router;
