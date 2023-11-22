@@ -2,7 +2,7 @@ const express = require('express');
 // const axios = require('axios');
 
 const router = express.Router();
-import temp_map from 'https://datavizcatalogue.com/methods/images/top_images/choropleth.png';
+const temp_map = 'https://datavizcatalogue.com/methods/images/top_images/choropleth.png';
 
 // axios.defaults.withCredentials = true;
 // const api = axios.create({
