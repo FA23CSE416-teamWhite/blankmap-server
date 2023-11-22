@@ -17,7 +17,7 @@ router.get('/maps', async (req, res) => {
         description: "Through the combined knowledge of all the felines in the world, we have created a masterpiece for the public",
         author: "Cat",
         tags: ["tag1", "tag2", "tag3"],
-        mapSnapshot: temp_map, // Assuming temp_map is defined elsewhere
+        mapSnapshot: '', // Assuming temp_map is defined elsewhere
         createdDate: "10/25/2015",
         upVotes: 10,
         numberOfComments: 30,
@@ -27,7 +27,7 @@ router.get('/maps', async (req, res) => {
         description: "Dogs > Cats Ratio",
         author: "Dog",
         tags: ["tag4", "tag5", "tag6"],
-        mapSnapshot: temp_map, // Assuming temp_map is defined elsewhere
+        mapSnapshot: '', // Assuming temp_map is defined elsewhere
         createdDate: "12/12/2002",
         upVotes: 9,
         numberOfComments: 27,
@@ -37,7 +37,7 @@ router.get('/maps', async (req, res) => {
         description: "Explore the world from above with our bird's eye view map",
         author: "BirdWatcher",
         tags: ["bird", "aerial", "landscape"],
-        mapSnapshot: temp_map, // Assuming temp_map is defined elsewhere
+        mapSnapshot: '', // Assuming temp_map is defined elsewhere
         createdDate: "05/08/2018",
         upVotes: 9,
         numberOfComments: 33,
