@@ -32,7 +32,8 @@ process.on("SIGINT", () => {
 // SETUP OUR OWN ROUTERS AS MIDDLEWARE
 const authRouter = require('./routes/auth-router')
 app.use('/auth', authRouter)
-app.use('/api/map', require('./routes/map-router'))
+const mapRouter = require('./routes/map-router')
+app.use('/api/map', mapRouter)
 
 //NOTE: These aren't written yet
 
