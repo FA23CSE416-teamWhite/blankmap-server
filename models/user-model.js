@@ -25,7 +25,7 @@ const userSchema = new Schema({
     },
     maps: [{
         type: ObjectId, 
-        ref: 'Map'
+        ref: 'MapPage'
     }],
     userName: {
         type: String, 
