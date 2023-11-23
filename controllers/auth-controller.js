@@ -3,6 +3,7 @@ const User = require('../models/user-model')
 const bcrypt = require('bcryptjs')
 
 getLoggedIn = async (req, res) => {
+    console.log("HI")
     try {
         let userId = auth.verifyUser(req);
         if (!userId) {
