@@ -2,7 +2,7 @@ const express = require('express')
 const cors = require('cors')
 const dotenv = require('dotenv')
 const cookieParser = require('cookie-parser')
-const AuthController = require('../controllers/auth-controller')
+
 const PORT = process.env.PORT || 8000;
 const app = express();
 
@@ -32,10 +32,6 @@ process.on("SIGINT", () => {
 // SETUP OUR OWN ROUTERS AS MIDDLEWARE
 const authRouter = require('./routes/auth-router')
 app.use('/auth', authRouter)
-app.post('/register', AuthController.registerUser)
-app.post('/login', AuthController.loginUser)
-app.get('/logout', AuthController.logoutUser)
-app.get('/loggedIn', AuthController.getLoggedIn)
 // const mapRouter = require('./routes/map-router')
 // app.use('/api/map', mapRouter)
 
