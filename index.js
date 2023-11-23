@@ -10,7 +10,7 @@ require('./db/database');
 
 // app.use(bodyParser.json());
 app.use(cors({
-    origin: 'https://blankmap-front-1626f242c2d7.herokuapp.com',
+    origin: 'http://localhost:3000',
     // methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', 
     credentials: true
 }));
