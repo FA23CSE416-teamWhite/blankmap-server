@@ -35,8 +35,6 @@ app.use('/auth', authRouter)
 const mapRouter = require('./routes/map-router')
 app.use('/api/map', mapRouter)
 
-app.post('/register', AuthController.registerUser)
-app.post('/login', AuthController.loginUser)
 
 //NOTE: These aren't written yet
 
