@@ -24,7 +24,7 @@ getLoggedIn = async (req, res) => {
                 lastName: loggedInUser.lastName,
                 email: loggedInUser.email,
                 userName: loggedInUser.userName,
-                dateJoined: loggedInUser.dateJoined.toLocaleDateString(),
+                dateJoined: loggedInUser.dateJoined,
                 phone: loggedInUser.phone,
                 bio: loggedInUser.bio,
                 mapLength: loggedInUser.maps.length
