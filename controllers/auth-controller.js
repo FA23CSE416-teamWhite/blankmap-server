@@ -76,7 +76,7 @@ loginUser = async (req, res) => {
         res.cookie("token", token, {
             httpOnly: true,
             secure: true,
-            sameSite: true
+            sameSite: false
         }).status(200).json({
             success: true,
             user: {
@@ -182,10 +182,59 @@ registerUser = async (req, res) => {
         res.status(500).send();
     }
 }
-
+updateUser = async (req, res) => {
+    if(auth.verifyUser(req) === null){
+        return res.status(400).json({
+            errorMessage: 'UNAUTHORIZED'
+        })
+    }
+    const body = req.body
+    console.log("updateUser: " + JSON.stringify(body));
+    if (!body) {
+        return res.status(400).json({
+            success: false,
+            error: 'You must provide a body to update',
+        })
+    }
+    User.findOne({ _id: req.params.id }, (err, user) => {
+        console.log("user found: " + JSON.stringify(user));
+        if (err) {
+            return res.status(404).json({
+                err,
+                message: 'User not found!',
+            })
+        }
+        // add other user properties if needed to be updated
+        user.firstName = body.user.firstName
+        user.lastName = body.user.lastName
+        user.email = body.user.email
+        user.userName = body.user.userName
+        user.maps = body.user.maps
+        user.phone = body.user.phone
+        user.bio = body.user.bio
+        user
+            .save()
+            .then(() => {
+                console.log("SUCCESS!!!");
+                return res.status(200).json({
+                        success: true,
+                        id: user._id,
+                        message: 'User updated!',
+                })
+            })
+            .catch(error => {
+                console.log("FAILURE: " + JSON.stringify(error));
+                return res.status(404).json({
+                    error,
+                    message: 'User not updated!',
+                })
+            })
+    })
+}
 module.exports = {
     getLoggedIn,
     registerUser,
     loginUser,
-    logoutUser
+    logoutUser,
+    updateUser,
 }
