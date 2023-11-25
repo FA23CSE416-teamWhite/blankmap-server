@@ -13,7 +13,7 @@ getLoggedIn = async (req, res) => {
                 errorMessage: "?"
             })
         }
-        console.log("AM I GETTING USER" )
+
         const loggedInUser = await User.findOne({ _id: userId });
         console.log("loggedInUser: " + loggedInUser);
 
@@ -80,10 +80,14 @@ loginUser = async (req, res) => {
         }).status(200).json({
             success: true,
             user: {
-                firstName: existingUser.firstName,
-                lastName: existingUser.lastName,  
-                email: existingUser.email,
-                userName: existingUser.userName              
+                firstName: loggedInUser.firstName,
+                lastName: loggedInUser.lastName,
+                email: loggedInUser.email,
+                userName: loggedInUser.userName,
+                dateJoined: loggedInUser.dateJoined,
+                phone: loggedInUser.phone,
+                bio: loggedInUser.bio,
+                mapLength: loggedInUser.maps.length
             }
         })
 
@@ -160,10 +164,14 @@ registerUser = async (req, res) => {
         }).status(200).json({
             success: true,
             user: {
-                firstName: savedUser.firstName,
-                lastName: savedUser.lastName,  
-                email: savedUser.email,
-                userName: savedUser.userName              
+                firstName: loggedInUser.firstName,
+                lastName: loggedInUser.lastName,
+                email: loggedInUser.email,
+                userName: loggedInUser.userName,
+                dateJoined: loggedInUser.dateJoined,
+                phone: loggedInUser.phone,
+                bio: loggedInUser.bio,
+                mapLength: loggedInUser.maps.length          
             }
         })
 
