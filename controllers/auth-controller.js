@@ -2,20 +2,65 @@ const auth = require('../auth')
 const User = require('../models/user-model')
 const bcrypt = require('bcryptjs')
 
+// getLoggedIn = async (req, res) => {
+//     try {
+//         let userId = auth.verifyUser(req);
+//         if (!userId) {
+//             return res.status(200).json({
+//                 loggedIn: false,
+//                 user: null,
+//                 errorMessage: "?"
+//             })
+//         }
+//         console.log("AM I GETTING USER")
+//         const loggedInUser = await User.findOne({ _id: userId });
+//         console.log("loggedInUser: " + loggedInUser);
+
+//         return res.status(200).json({
+//             loggedIn: true,
+//             user: {
+//                 firstName: loggedInUser.firstName,
+//                 lastName: loggedInUser.lastName,
+//                 email: loggedInUser.email,
+//                 userName: loggedInUser.userName,
+//                 dateJoined: loggedInUser.dateJoined,
+//                 phone: loggedInUser.phone,
+//                 bio: loggedInUser.bio,
+//                 mapLength: loggedInUser.maps.length
+//             }
+//         })
+//     } catch (err) {
+//         console.log("err: " + err);
+//         res.json(false);
+//     }
+// }
 getLoggedIn = async (req, res) => {
+    console.log("HI")
     try {
+        // Assuming `auth.verifyUser(req)` is properly functioning
         let userId = auth.verifyUser(req);
+        
         if (!userId) {
-            return res.status(200).json({
+            return res.status(401).json({
                 loggedIn: false,
                 user: null,
-                errorMessage: "?"
-            })
+                errorMessage: "Unauthorized"
+            });
         }
-        console.log("AM I GETTING USER")
-        const loggedInUser = await User.findOne({ _id: userId });
-        console.log("loggedInUser: " + loggedInUser);
 
+        console.log("Fetching user with ID:", userId);
+
+        const loggedInUser = await User.findOne({ _id: userId });
+
+        if (!loggedInUser) {
+            return res.status(404).json({
+                loggedIn: false,
+                user: null,
+                errorMessage: "User not found"
+            });
+        }
+
+        // Return the user details
         return res.status(200).json({
             loggedIn: true,
             user: {
@@ -28,12 +73,17 @@ getLoggedIn = async (req, res) => {
                 bio: loggedInUser.bio,
                 mapLength: loggedInUser.maps.length
             }
-        })
+        });
+
     } catch (err) {
-        console.log("err: " + err);
-        res.json(false);
+        console.error("Error fetching user:", err);
+        res.status(500).json({
+            loggedIn: false,
+            user: null,
+            errorMessage: "Internal server error"
+        });
     }
-}
+};
 
 loginUser = async (req, res) => {
     console.log("loginUser");

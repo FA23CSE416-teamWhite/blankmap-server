@@ -31,6 +31,8 @@ function authManager() {
     }
 
     verifyUser = (req) => {
+        console.log("INSIDE VERIFY USER")
+        console.log(req)
         try {
             const token = req.cookies.token;
             if (!token) {
