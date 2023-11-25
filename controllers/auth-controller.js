@@ -80,14 +80,14 @@ loginUser = async (req, res) => {
         }).status(200).json({
             success: true,
             user: {
-                firstName: loggedInUser.firstName,
-                lastName: loggedInUser.lastName,
-                email: loggedInUser.email,
-                userName: loggedInUser.userName,
-                dateJoined: loggedInUser.dateJoined,
-                phone: loggedInUser.phone,
-                bio: loggedInUser.bio,
-                mapLength: loggedInUser.maps.length
+                firstName: existingUser.firstName,
+                lastName: existingUser.lastName,  
+                email: existingUser.email,
+                userName: existingUser.userName,
+                dateJoined: existingUser.dateJoined,
+                phone: existingUser.phone,
+                bio: existingUser.bio,
+                mapLength: existingUser.maps.length
             }
         })
 
@@ -164,14 +164,14 @@ registerUser = async (req, res) => {
         }).status(200).json({
             success: true,
             user: {
-                firstName: loggedInUser.firstName,
-                lastName: loggedInUser.lastName,
-                email: loggedInUser.email,
-                userName: loggedInUser.userName,
-                dateJoined: loggedInUser.dateJoined,
-                phone: loggedInUser.phone,
-                bio: loggedInUser.bio,
-                mapLength: loggedInUser.maps.length          
+                firstName: savedUser.firstName,
+                lastName: savedUser.lastName,  
+                email: savedUser.email,
+                userName: savedUser.userName,
+                dateJoined: savedUser.dateJoined,
+                phone: savedUser.phone,
+                bio: savedUser.bio,
+                mapLength: savedUser.maps.length             
             }
         })
 
