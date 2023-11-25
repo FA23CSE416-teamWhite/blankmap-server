@@ -38,7 +38,7 @@ loginUser = async (req, res) => {
         const { userName, password } = req.body;
         console.log(userName)
         console.log(password)
-        if (!username || !password) {
+        if (!userName || !password) {
             return res
                 .status(400)
                 .json({ errorMessage: "Please enter all required fields." });
