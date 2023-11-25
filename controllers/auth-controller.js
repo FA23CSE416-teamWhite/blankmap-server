@@ -101,9 +101,9 @@ logoutUser = async (req, res) => {
 registerUser = async (req, res) => {
     console.log("REGISTERING USER IN BACKEND");
     try {
-        const { firstName, lastName, email, userName, password, passwordVerify } = req.body;
-        console.log("create user: " + firstName + " " + lastName + " " + email + " " + userName + " " + password + " " + passwordVerify);
-        if (!firstName || !lastName || !email || !userName || !password || !passwordVerify) {
+        const { firstName, lastName, email, userName, password, passwordVerify,recoveryQuestion,recoveryAnswer } = req.body;
+        console.log("create user: " + firstName + " " + lastName + " " + email + " " + userName + " " + password + " " + passwordVerify+" " + recoveryQuestion+ " " + recoveryAnswer);
+        if (!firstName || !lastName || !email || !userName || !password || !passwordVerify||!recoveryQuestion ||!recoveryAnswer) {
             return res
                 .status(400)
                 .json({ errorMessage: "Please enter all required fields." });
@@ -141,7 +141,7 @@ registerUser = async (req, res) => {
         const passwordHash = await bcrypt.hash(password, salt);
         console.log("passwordHash: " + passwordHash);
 
-        const newUser = new User({firstName, lastName, email, userName, passwordHash});
+        const newUser = new User({firstName, lastName, email, userName, passwordHash,recoveryQuestion,recoveryAnswer});
         const savedUser = await newUser.save();
         console.log("new user saved: " + savedUser._id);
 

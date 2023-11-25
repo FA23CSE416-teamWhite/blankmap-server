@@ -23,13 +23,30 @@ const userSchema = new Schema({
         type: String, 
         required: true 
     },
+    
+    recoveryQuestion: {
+        type: String, 
+        required: true 
+    },
+    recoveryAnswer: {
+        type: String, 
+        required: true 
+    },
     maps: [{
         type: ObjectId, 
         ref: 'MapPage'
     }],
-    userName: {
+    dateJoined: {
+        type: Date, 
+        default: Date.now
+    },
+    phone: {
         type: String, 
-        required: true
+        default: null
+    },
+    bio: {
+        type: String, 
+        default: null
     }
 })
 module.exports = mongoose.model("User", userSchema, "users")
