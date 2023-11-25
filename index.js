@@ -35,6 +35,8 @@ const authRouter = require('./routes/auth-router')
 app.use('/auth', authRouter)
 const mapRouter = require('./routes/map-router')
 app.use('/api/map', mapRouter)
+const userRouter = require('./routes/user-router')
+app.use('/api/user', userRouter)
 
 
 //NOTE: These aren't written yet
