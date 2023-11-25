@@ -31,17 +31,18 @@ function authManager() {
     }
 
     verifyUser = (req) => {
-        console.log("INSIDE VERIFY USER")
-        console.log(req)
+        console.log("INSIDE VERIFY USERS")
         try {
             const token = req.cookies.token;
             if (!token) {
+                console.log("!token")
                 return null;
             }
-
+            console.log("LEAVING GOOD")
             const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
             return decodedToken.userId;
         } catch (err) {
+            console.log("ERR")
             return null;
         }
     }
