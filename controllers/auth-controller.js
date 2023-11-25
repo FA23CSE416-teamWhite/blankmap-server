@@ -3,7 +3,6 @@ const User = require('../models/user-model')
 const bcrypt = require('bcryptjs')
 
 getLoggedIn = async (req, res) => {
-    console.log("HI")
     try {
         let userId = auth.verifyUser(req);
         if (!userId) {
@@ -13,7 +12,7 @@ getLoggedIn = async (req, res) => {
                 errorMessage: "?"
             })
         }
-
+        console.log("AM I GETTING USER")
         const loggedInUser = await User.findOne({ _id: userId });
         console.log("loggedInUser: " + loggedInUser);
 
