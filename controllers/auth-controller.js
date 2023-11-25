@@ -35,15 +35,16 @@ getLoggedIn = async (req, res) => {
 loginUser = async (req, res) => {
     console.log("loginUser");
     try {
-        const { username, password } = req.body;
-
+        const { userName, password } = req.body;
+        console.log(userName)
+        console.log(password)
         if (!username || !password) {
             return res
                 .status(400)
                 .json({ errorMessage: "Please enter all required fields." });
         }
 
-        const existingUser = await User.findOne({ username: username });
+        const existingUser = await User.findOne({ userName: userName });
         console.log("existingUser: " + existingUser);
         if (!existingUser) {
             return res
