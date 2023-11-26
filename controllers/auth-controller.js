@@ -214,41 +214,24 @@ updateUser = async (req, res) => {
             error: 'You must provide a body to update',
         })
     }
-    User.findOne({ email: req.params.email }, (err, user) => {
-        console.log("user found: " + JSON.stringify(user));
-        if (err) {
-            return res.status(404).json({
-                err,
-                message: 'User not found!',
-            })
-        }
-        // add other user properties if needed to be updated
-        user.firstName = body.user.firstName
-        user.lastName = body.user.lastName
-        user.email = body.user.email
-        user.userName = body.user.userName
-        user.maps = body.user.maps
-        user.phone = body.user.phone
-        user.bio = body.user.bio
-        user
-            .save()
-            .then(() => {
-                console.log("SUCCESS!!!");
-                return res.status(200).json({
-                        success: true,
-                        id: user._id,
-                        message: 'User updated!',
-                })
-            })
-            .catch(error => {
-                console.log("FAILURE: " + JSON.stringify(error));
-                return res.status(404).json({
-                    error,
-                    message: 'User not updated!',
-                })
-            })
+    User.updateOne(req.params.email,req.body)
+    .then(() => {
+        console.log("SUCCESS!!!");
+        return res.status(200).json({
+                success: true,
+                id: user._id,
+                message: 'User updated!',
+        })
+    })
+    .catch(error => {
+        console.log("FAILURE: " + JSON.stringify(error));
+        return res.status(404).json({
+            error,
+            message: 'User not updated!',
+        })
     })
 }
+
 module.exports = {
     getLoggedIn,
     getQuestion,

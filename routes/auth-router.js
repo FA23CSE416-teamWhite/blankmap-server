@@ -8,7 +8,7 @@ router.post('/update', AuthController.updateUser)
 router.get('/logout', AuthController.logoutUser)
 router.get('/loggedIn', AuthController.getLoggedIn)
 router.get('/question/:email', AuthController.getQuestion)
-router.get('/reset', AuthController.updateUser)
+router.get('/reset/:email', AuthController.updateUser)
 router.get('/update', AuthController.updateUser)
 
 module.exports = router
