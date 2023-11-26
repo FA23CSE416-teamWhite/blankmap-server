@@ -32,11 +32,7 @@ const userSchema = new Schema({
         type: String, 
         required: true 
     },
-    privateMaps:[{
-        type: ObjectId, 
-        ref: 'Map'
-    }],
-    publicMaps:[{
+    maps:[{
         type: ObjectId, 
         ref: 'Map'
     }],
