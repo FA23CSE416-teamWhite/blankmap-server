@@ -227,7 +227,8 @@ router.get('/maps', (req, res) => {
             // Perform a case-insensitive search on the title and description fields
             const filteredMaps = mapsData.filter((map) => (
                 map.title.toLowerCase().includes(qExtract.toLowerCase()) ||
-                map.description.toLowerCase().includes(qExtract.toLowerCase())
+                map.description.toLowerCase().includes(qExtract.toLowerCase()) ||
+                map.author.toLowerCase().includes(qExtract.toLowerCase())
             ));
             console.log('Search query:', qExtract);
             res.json(filteredMaps);
