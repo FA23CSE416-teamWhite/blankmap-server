@@ -206,7 +206,7 @@ registerUser = async (req, res) => {
     }
 }
 updateUser = async (req, res) => {
-    const body = req.body
+    const body = req.params
     console.log("updateUser: " + JSON.stringify(body));
     if (!body) {
         return res.status(400).json({
@@ -214,12 +214,12 @@ updateUser = async (req, res) => {
             error: 'You must provide a body to update',
         })
     }
-    User.updateOne(req.params.email,req.body)
+    User.updateOne(req.params,req.body)
     .then(() => {
         console.log("SUCCESS!!!");
         return res.status(200).json({
                 success: true,
-                id: user._id,
+                id: User._id,
                 message: 'User updated!',
         })
     })
