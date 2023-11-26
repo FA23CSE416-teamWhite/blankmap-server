@@ -27,7 +27,7 @@ getLoggedIn = async (req, res) => {
                 dateJoined: loggedInUser.dateJoined,
                 phone: loggedInUser.phone,
                 bio: loggedInUser.bio,
-                mapLength: loggedInUser.maps.length
+                maps: loggedInUser.maps
             }
         })
     } catch (err) {
