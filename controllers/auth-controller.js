@@ -39,7 +39,7 @@ getLoggedIn = async (req, res) => {
 getQuestion = async (req, res) => {
     try {
         console.log(req.body)
-        const user = await User.findOne({ email: req.body.email });
+        const user = await User.findOne({ email: req.params.email });
         if(!user){
             return res
                 .status(401)
