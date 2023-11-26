@@ -11,24 +11,24 @@ require('./db/database');
 
 // app.use(bodyParser.json());
 app.use(cors({
-    origin: 'http://localhost:3000',
-    // methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', 
-    credentials: true
+  origin: ['http://localhost:3000', 'https://blank-map-client.web.app','https://blankmap-front-1626f242c2d7.herokuapp.com'],
+  // methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', 
+  credentials: true
 }));
 app.use(express.json());
 app.use(cookieParser())
 const server = app.listen(PORT, () => {
-    console.log(`Server started on port ${PORT}`);
+  console.log(`Server started on port ${PORT}`);
 });
 process.on("SIGINT", () => {
-    mongoose.connection.close(() => {
-      console.log("Server closed. Database instance disconnected.");
-      server.close(() => {
-        console.log("Server closed.");
-        process.exit(0);
-      });
+  mongoose.connection.close(() => {
+    console.log("Server closed. Database instance disconnected.");
+    server.close(() => {
+      console.log("Server closed.");
+      process.exit(0);
     });
   });
+});
 
 // SETUP OUR OWN ROUTERS AS MIDDLEWARE
 const authRouter = require('./routes/auth-router')
@@ -73,11 +73,11 @@ app.use('/api/map', mapRouter)
 // })
 
 app.get('/hello', (req, res) => {
-    res.send('Hello World!');
-  });
+  res.send('Hello World!');
+});
 
 app.put('/put', (req, res) => {
-    res.send('put hear!');
+  res.send('put hear!');
 });
-  
+
 module.exports = app;
