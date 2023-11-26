@@ -32,21 +32,31 @@ const userSchema = new Schema({
         type: String, 
         required: true 
     },
-    maps: [{
+    privateMaps:[{
         type: ObjectId, 
-        ref: 'MapPage'
+        ref: 'Map'
     }],
+    publicMaps:[{
+        type: ObjectId, 
+        ref: 'Map'
+    }],
+    comments: [{
+        type: ObjectId, 
+        ref: 'Comment'
+    }],
+    profilePicture:String,
     dateJoined: {
         type: Date, 
         default: Date.now
     },
-    phone: {
-        type: String, 
-        default: null
-    },
+    phone: String,
     bio: {
         type: String, 
-        default: null
+        default: "Enter a Bio"
+    },
+    userType:{
+        type:String,
+        default:"registered"
     }
 })
 module.exports = mongoose.model("User", userSchema, "users")

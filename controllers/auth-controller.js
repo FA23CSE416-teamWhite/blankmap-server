@@ -36,6 +36,29 @@ getLoggedIn = async (req, res) => {
     }
 }
 
+getQuestion = async (req, res) => {
+    try {
+        console.log(req)
+        const user = await User.findOne({ email: req.email });
+        if(!user){
+            return res
+                .status(401)
+                .json({
+                    success: false,
+                    errorMessage: "No user found."
+                })
+        }
+
+        return res.status(200).json({
+            question: user.recoveryQuestion,
+            answer: user.recoveryAnswer
+        })
+    } catch (err) {
+        console.log("err: " + err);
+        res.json(false);
+    }
+}
+
 loginUser = async (req, res) => {
     console.log("loginUser");
     try {
@@ -233,6 +256,7 @@ updateUser = async (req, res) => {
 }
 module.exports = {
     getLoggedIn,
+    getQuestion,
     registerUser,
     loginUser,
     logoutUser,
