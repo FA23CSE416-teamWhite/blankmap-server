@@ -27,7 +27,8 @@ getLoggedIn = async (req, res) => {
                 dateJoined: loggedInUser.dateJoined,
                 phone: loggedInUser.phone,
                 bio: loggedInUser.bio,
-                maps: loggedInUser.maps
+                maps: loggedInUser.maps,
+                comments: loggedInUser.comments
             }
         })
     } catch (err) {
@@ -109,7 +110,8 @@ loginUser = async (req, res) => {
                 dateJoined: existingUser.dateJoined,
                 phone: existingUser.phone,
                 bio: existingUser.bio,
-                maps: existingUser.maps
+                maps: existingUser.maps,
+                comments: existingUser.comments
             }
         })
 
@@ -193,7 +195,8 @@ registerUser = async (req, res) => {
                 dateJoined: savedUser.dateJoined,
                 phone: savedUser.phone,
                 bio: savedUser.bio,
-                maps: savedUser.maps      
+                maps: savedUser.maps,
+                comments: savedUser.comments
             }
         })
 
