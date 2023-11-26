@@ -50,9 +50,10 @@ function authManager() {
     signToken = (userId) => {
         return jwt.sign({
             userId: userId
-        }, process.env.JWT_SECRET);
+        }, process.env.JWT_SECRET, 
+            {expiresIn: '1h'}
+        );
     }
-
     return this;
 }
 
