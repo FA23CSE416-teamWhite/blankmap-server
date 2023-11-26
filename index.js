@@ -30,6 +30,7 @@ process.on("SIGINT", () => {
   });
 });
 
+
 // SETUP OUR OWN ROUTERS AS MIDDLEWARE
 const authRouter = require('./routes/auth-router')
 app.use('/auth', authRouter)
@@ -71,6 +72,13 @@ app.use('/api/map', mapRouter)
 //         .then(users => res.json(users))
 //         .catch(err => console.log(err))
 // })
+
+app.put('/api/users', (req, res) => {
+  console.log(req)
+  User.updateOne(req.query,req.body)
+      .then(res.send("success"))
+      .catch(err => console.log(err))
+})
 
 app.get('/hello', (req, res) => {
   res.send('Hello World!');
