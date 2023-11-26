@@ -38,8 +38,7 @@ getLoggedIn = async (req, res) => {
 
 getQuestion = async (req, res) => {
     try {
-        console.log(req)
-        const user = await User.findOne({ email: req.email });
+        const user = await User.findOne({ email: req.body.email });
         if(!user){
             return res
                 .status(401)
@@ -206,11 +205,6 @@ registerUser = async (req, res) => {
     }
 }
 updateUser = async (req, res) => {
-    if(auth.verifyUser(req) === null){
-        return res.status(400).json({
-            errorMessage: 'UNAUTHORIZED'
-        })
-    }
     const body = req.body
     console.log("updateUser: " + JSON.stringify(body));
     if (!body) {
@@ -219,7 +213,7 @@ updateUser = async (req, res) => {
             error: 'You must provide a body to update',
         })
     }
-    User.findOne({ _id: req.params.id }, (err, user) => {
+    User.findOne({ email: req.params.email }, (err, user) => {
         console.log("user found: " + JSON.stringify(user));
         if (err) {
             return res.status(404).json({
