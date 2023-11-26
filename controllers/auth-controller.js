@@ -214,6 +214,14 @@ updateUser = async (req, res) => {
             error: 'You must provide a body to update',
         })
     }
+    if(req.body.password){
+        const saltRounds = 10;
+        const salt = await bcrypt.genSalt(saltRounds);
+        const passwordHash = await bcrypt.hash(password, salt);
+
+        req.body.passwordHash = passwordHash
+        delete req.body.password
+    }
     User.updateOne(req.params,req.body)
     .then(() => {
         console.log("SUCCESS!!!");
