@@ -71,6 +71,8 @@ loginUser = async (req, res) => {
 
         // LOGIN THE USER
         const token = auth.signToken(existingUser._id);
+        const expirationDate = new Date(Date.now() + (7 * 24 * 60 * 60 * 1000));
+
         console.log(token);
 
         
