@@ -73,23 +73,48 @@ loginUser = async (req, res) => {
         const token = auth.signToken(existingUser._id);
         console.log(token);
 
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: true,
-            sameSite: false
-        }).status(200).json({
-            success: true,
-            user: {
-                firstName: existingUser.firstName,
-                lastName: existingUser.lastName,  
-                email: existingUser.email,
-                userName: existingUser.userName,
-                dateJoined: existingUser.dateJoined,
-                phone: existingUser.phone,
-                bio: existingUser.bio,
-                mapLength: existingUser.maps.length
-            }
-        })
+        const setCookiePromise = new Promise((resolve) => {
+            res.cookie("token", token, {
+                httpOnly: true,
+                secure: true,
+                sameSite: "none"
+            }).status(200).json({
+                success: true,
+                user: {
+                    firstName: existingUser.firstName,
+                    lastName: existingUser.lastName,  
+                    email: existingUser.email,
+                    userName: existingUser.userName,
+                    dateJoined: existingUser.dateJoined,
+                    phone: existingUser.phone,
+                    bio: existingUser.bio,
+                    mapLength: existingUser.maps.length
+                }
+            });
+            resolve(); // Resolve the Promise once the cookie is set
+        });
+    
+        setCookiePromise.then(() => {
+            // Call getLoggedIn after the cookie is set
+            getLoggedIn(req, res);
+        });
+        // res.cookie("token", token, {
+        //     httpOnly: true,
+        //     secure: true,
+        //     sameSite: false
+        // }).status(200).json({
+        //     success: true,
+        //     user: {
+        //         firstName: existingUser.firstName,
+        //         lastName: existingUser.lastName,  
+        //         email: existingUser.email,
+        //         userName: existingUser.userName,
+        //         dateJoined: existingUser.dateJoined,
+        //         phone: existingUser.phone,
+        //         bio: existingUser.bio,
+        //         mapLength: existingUser.maps.length
+        //     }
+        // })
 
     } catch (err) {
         console.error(err);
