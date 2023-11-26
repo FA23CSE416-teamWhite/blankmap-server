@@ -38,7 +38,7 @@ getLoggedIn = async (req, res) => {
 
 getQuestion = async (req, res) => {
     try {
-        console.log(req.body)
+        console.log(req.params)
         const user = await User.findOne({ email: req.params.email });
         if(!user){
             return res
