@@ -1,13 +1,23 @@
 const Map = require('../models/map-model');
 const User = require('../models/user-model');
 const auth = require('../auth');
+const MapPage = require('../models/mappage-model');
 
 createMap = (req, res) => {
+    const { title, description, publicStatus, tags, file } = req.body;
     if (auth.verifyUser(req) === null) {
         return res.status(400).json({
             errorMessage: 'UNAUTHORIZED'
         });
     }
+
+    if (!title || !description || !publicStatus || !tags) {
+        return res.status(400).json({
+            success: false,
+            error: 'Invalid input. Please provide all required fields.',
+        });
+    }
+
     const body = req.body;
     console.log("createMap body: " + JSON.stringify(body));
     if (!body) {
@@ -17,13 +27,30 @@ createMap = (req, res) => {
         });
     }
 
-    const map = new Map(body);
+    const map = new MapPage({
+        title: title,
+        description: description,
+        publicStatus: publicStatus,
+        tags: tags,
+        // file: file
+        lastModified: Date.now(),
+    });
     console.log("map: " + map.toString());
     if (!map) {
         return res.status(400).json({ success: false, error: err });
     }
 
     User.findOne({ _id: req.userId }, (err, user) => {
+        if (err) {
+            return res.status(500).json({
+                errorMessage: 'Internal Server Error',
+            });
+        }
+        if (!user) {
+            return res.status(404).json({
+                errorMessage: 'User not found',
+            });
+        }
         console.log("user found: " + JSON.stringify(user));
         user.maps.push(map._id);
         user.save()
@@ -35,10 +62,15 @@ createMap = (req, res) => {
                         });
                     })
                     .catch(error => {
-                        return res.status(400).json({
-                            errorMessage: 'Map Not Created!'
+                        return res.status(500).json({
+                            errorMessage: 'Internal Server Error',
                         });
                     });
+            })
+            .catch(error => {
+                return res.status(500).json({
+                    errorMessage: 'Internal Server Error',
+                });
             });
     });
 };

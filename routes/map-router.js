@@ -1,6 +1,6 @@
 const express = require('express');
 // const axios = require('axios');
-
+const MapController = require('../controllers/map-controller');
 const router = express.Router();
 const temp_map = 'https://datavizcatalogue.com/methods/images/top_images/choropleth.png';
 
@@ -238,4 +238,5 @@ router.get('/maps', (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+router.post('/createMap', MapController.createMap);
 module.exports = router;
