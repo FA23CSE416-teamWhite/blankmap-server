@@ -222,6 +222,7 @@ updateUser = async (req, res) => {
         req.body.passwordHash = passwordHash
         delete req.body.password
     }
+    console.log(JSON.stringify(req.body))
     User.updateOne(req.params,req.body)
     .then(() => {
         console.log("SUCCESS!!!");
