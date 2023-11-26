@@ -109,7 +109,7 @@ loginUser = async (req, res) => {
                 dateJoined: existingUser.dateJoined,
                 phone: existingUser.phone,
                 bio: existingUser.bio,
-                mapLength: existingUser.maps.length
+                maps: existingUser.maps
             }
         })
 
@@ -193,7 +193,7 @@ registerUser = async (req, res) => {
                 dateJoined: savedUser.dateJoined,
                 phone: savedUser.phone,
                 bio: savedUser.bio,
-                mapLength: savedUser.maps.length             
+                maps: savedUser.maps      
             }
         })
 
