@@ -227,8 +227,8 @@ updateUser = async (req, res) => {
         delete req.body.password
     }
     for(key in req.body){
-        if(req.body.key === ""){
-            delete req.body['key']
+        if(req.body[key] === ""){
+            delete req.body[key]
         }
     }
     console.log(JSON.stringify(req.body))
