@@ -4,7 +4,7 @@ const auth = require('../auth');
 const MapPage = require('../models/mappage-model');
 
 createMap = (req, res) => {
-    const { title, description, publicStatus, tags, file } = req.body;
+    const { title, description, publicStatus,selectedCategory, tags, file } = req.body;
     user_id = auth.verifyUser(req);
     console.log("user_id_createmap: " + user_id);
     if (user_id === null) {
@@ -12,14 +12,14 @@ createMap = (req, res) => {
             errorMessage: 'UNAUTHORIZED'
         });
     }
-
-    if (!title || !description || !publicStatus || !tags) {
+    console.log("passed verify useer")
+    if (!title || !description || !publicStatus || !tags || !selectedCategory|| !file) {
         return res.status(400).json({
             success: false,
             error: 'Invalid input. Please provide all required fields.',
         });
     }
-
+    console.log("passed valid input")
     const body = req.body;
     console.log("createMap body: " + JSON.stringify(body));
     if (!body) {
@@ -34,6 +34,7 @@ createMap = (req, res) => {
         description: description,
         publicStatus: publicStatus,
         tags: tags,
+        
         // file: file
         lastModified: Date.now(),
     });
