@@ -99,7 +99,7 @@ loginUser = async (req, res) => {
         res.cookie("token", token, {
             httpOnly: true,
             secure: true,
-            sameSite: false
+            sameSite: "none"
         }).status(200).json({
             success: true,
             user: {
