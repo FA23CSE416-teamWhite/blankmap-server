@@ -34,7 +34,6 @@ createMap = (req, res) => {
         description: description,
         publicStatus: publicStatus,
         tags: tags,
-        
         // file: file
         lastModified: Date.now(),
     });
@@ -57,6 +56,7 @@ createMap = (req, res) => {
             });
         }
         console.log("user found: " + JSON.stringify(user));
+        map.owner = user.userName;
         user.maps.push(map._id);
         user.save()
             .then(() => {
@@ -106,10 +106,72 @@ deleteMap = async (req, res) => {
     });
 };
 
+updateMapPage = async (req, res) => {
+    if (auth.verifyUser(req) === null) {
+        return res.status(400).json({
+            errorMessage: 'UNAUTHORIZED'
+        });
+    }
+    const body = req.body
+    console.log("updateMappage: " + JSON.stringify(body));
+    console.log("req.body.name: " + req.body.title);
+
+    if (!body) {
+        return res.status(400).json({
+            success: false,
+            error: 'You must provide a body to update',
+        })
+    }
+    MapPage.findById({ _id: req.params.id }, (err, mappage) => {
+        console.log("mappage found: " + JSON.stringify(mappage));
+        if (err) {
+            return res.status(404).json({
+                err,
+                message: 'MapPage not found!',
+            })
+        }
+        // DOES THIS LIST BELONG TO THIS USER?
+        async function asyncFindUser(mappage) {
+            await User.findOne({ userName: mappage.owner }, (err, user) => {
+                    console.log("correct user!");
+                    console.log("req.body.name: " + req.body.name);
+
+                    mappage.comments = body.mappage.comments;
+                    mappage.description = body.mappage.description;
+                    mappage.lastModified = body.mappage.lastModified;
+                    mappage.map = body.mappage.map;
+                    mappage.publicStatus = body.mappage.publicStatus;
+                    mappage.tags = body.mappage.tags;
+                    mappage.title = body.mappage.title;
+                    mappage.upvotes = body.mappage.upvotes;
+                    mappage.downvotes = body.mappage.downvotes;
+                    mappage
+                        .save()
+                        .then(() => {
+                            console.log("SUCCESS!!!");
+                            return res.status(200).json({
+                                success: true,
+                                id: mappage._id,
+                                message: 'mappage updated!',
+                            })
+                        })
+                        .catch(error => {
+                            console.log("FAILURE: " + JSON.stringify(error));
+                            return res.status(404).json({
+                                error,
+                                message: 'mappage not updated!',
+                            })
+                        })
+            });
+        }
+        asyncFindUser(mappage);
+    })
+};
 // Similar functions for other map-related endpoints
 
 module.exports = {
     createMap,
     deleteMap,
+    updateMapPage,
     // Add other map-related functions here
 };

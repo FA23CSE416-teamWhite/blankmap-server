@@ -239,4 +239,5 @@ router.get('/maps', (req, res) => {
     }
 });
 router.post('/createMap', MapController.createMap);
+router.put('/updateMapPage', MapController.updateMapPage);
 module.exports = router;
