@@ -226,7 +226,7 @@ updateUser = async (req, res) => {
         delete req.body.password
     }
     console.log(JSON.stringify(req.body))
-    User.updateOne(req.params,req.body)
+    User.updateOne(req.body.params,req.body)
     .then(() => {
         console.log("SUCCESS!!!");
         return res.status(200).json({
