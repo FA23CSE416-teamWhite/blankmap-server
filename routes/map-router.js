@@ -554,11 +554,11 @@ const mapsData = [
 // Endpoint to fetch maps with a query parameter
 router.get('/maps', (req, res) => {
     const { q } = req.query;
-    console.log('q:', q);
+    // console.log('q:', q);
     const qExtract = q.replace(/^"(.*)"$/, '$1');
-    console.log('q:', qExtract);
-    console.log('q.trim():', qExtract.trim());
-    console.log(qExtract.trim().length)
+    // console.log('q:', qExtract);
+    // console.log('q.trim():', qExtract.trim());
+    // console.log(qExtract.trim().length)
     try {
         // If q is null or empty, return all maps
         if (qExtract === null || qExtract === undefined || qExtract.trim() === "") {

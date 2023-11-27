@@ -18,7 +18,8 @@ beforeAll(async () => {
   userId = response.body.userId;
   // console.log(response)
 });
-describe('API Tests', () => {
+
+describe('Basic GET Tests', () => {
   it('GET / should return "Hello World!"', async () => {
     const res = await request(app).get('/hello');
     expect(res.statusCode).toEqual(200);
@@ -32,15 +33,15 @@ describe('API Tests', () => {
 //       .expect(200, done);
 //   });
 // });
-describe('Basic Server Tests', () => {
-  it('should return a 404 status code for invalid routes', async () => {
+describe('Basic Invalid Tests', () => {
+  it('GET should return a 404 status code for invalid routes', async () => {
     const res = await request(app).get('/invalid-route');
     expect(res.statusCode).toEqual(404);
   });
 });
 
-describe('PUT Tests', () => {
-  it('put / should return "put hear!"', async () => {
+describe('Basic PUT Tests', () => {
+  it('PUT / should return "put hear!"', async () => {
     const res = await request(app).put('/put');
     expect(res.statusCode).toEqual(200);
     expect(res.text).toEqual('put hear!');
@@ -67,6 +68,43 @@ describe('Get Maps tests', () => {
     expect(res.statusCode).toEqual(200);
   });
 }); 
+
+describe("Logout Tests", () => {
+  it("GET /auth/logout should return a 200 status code", async () => {
+    const res = await request(app).get("/auth/logout").set("Cookie", cookie);
+    expect(res.statusCode).toEqual(200);
+  });
+});
+
+describe("Get logged in user", () => {
+  it("GET /auth/user should return a 200 status code", async () => {
+    const res = await request(app).get("/auth/loggedIn").set("Cookie", cookie);
+    console.log(res.body.loggedIn);
+    expect(res.body.loggedIn).toEqual(true);
+    expect(res.statusCode).toEqual(200);
+  });
+});
+
+describe("Post User Repeat Registration", () => {
+  it("POST /auth/register should return a 400 status code with already exist message", async () => {
+    const newUser = {
+      firstName: "jest",
+      lastName: "jest",
+      email: "jest@jest",
+      userName: "testUser",
+      password: "12345678",
+      passwordVerify: "12345678",
+      recoveryQuestion: "What is your favorite color?",
+      recoveryAnswer: "blue",
+    };
+    const res = await request(app).post("/auth/register").send(newUser);
+    expect(res.body.errorMessage).toEqual("An account with this email address already exists.");
+    expect(res.statusCode).toEqual(400);
+  }
+  );
+}
+);
+
 
 afterAll(async () => {
   await mongoose.connection.close();
