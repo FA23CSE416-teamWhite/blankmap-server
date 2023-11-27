@@ -3,7 +3,6 @@ const User = require('../models/user-model')
 const bcrypt = require('bcryptjs')
 
 getLoggedIn = async (req, res) => {
-    console.log("HI")
     try {
         let userId = auth.verifyUser(req);
         if (!userId) {
@@ -96,11 +95,13 @@ loginUser = async (req, res) => {
         // LOGIN THE USER
         const token = auth.signToken(existingUser._id);
         console.log(token);
+        const expirationDate = new Date(Date.now() + (7 * 24 * 60 * 60 * 1000));
 
         res.cookie("token", token, {
             httpOnly: true,
             secure: true,
-            sameSite: "none"
+            sameSite: "none",
+            expires: expirationDate
         }).status(200).json({
             success: true,
             user: {
