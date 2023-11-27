@@ -39,7 +39,8 @@ getLoggedIn = async (req, res) => {
 
 getQuestion = async (req, res) => {
     try {
-        const user = await User.findOne({ email: req.body.email });
+        console.log(req.params)
+        const user = await User.findOne({ email: req.params.email });
         if(!user){
             return res
                 .status(401)
@@ -208,7 +209,7 @@ registerUser = async (req, res) => {
     }
 }
 updateUser = async (req, res) => {
-    const body = req.body
+    const body = req.params
     console.log("updateUser: " + JSON.stringify(body));
     if (!body) {
         return res.status(400).json({
@@ -216,41 +217,33 @@ updateUser = async (req, res) => {
             error: 'You must provide a body to update',
         })
     }
-    User.findOne({ email: req.params.email }, (err, user) => {
-        console.log("user found: " + JSON.stringify(user));
-        if (err) {
-            return res.status(404).json({
-                err,
-                message: 'User not found!',
-            })
-        }
-        // add other user properties if needed to be updated
-        user.firstName = body.user.firstName
-        user.lastName = body.user.lastName
-        user.email = body.user.email
-        user.userName = body.user.userName
-        user.maps = body.user.maps
-        user.phone = body.user.phone
-        user.bio = body.user.bio
-        user
-            .save()
-            .then(() => {
-                console.log("SUCCESS!!!");
-                return res.status(200).json({
-                        success: true,
-                        id: user._id,
-                        message: 'User updated!',
-                })
-            })
-            .catch(error => {
-                console.log("FAILURE: " + JSON.stringify(error));
-                return res.status(404).json({
-                    error,
-                    message: 'User not updated!',
-                })
-            })
+    if(req.body.password){
+        const saltRounds = 10;
+        const salt = await bcrypt.genSalt(saltRounds);
+        const passwordHash = await bcrypt.hash(password, salt);
+
+        req.body.passwordHash = passwordHash
+        delete req.body.password
+    }
+    console.log(JSON.stringify(req.body))
+    User.updateOne(req.params,req.body)
+    .then(() => {
+        console.log("SUCCESS!!!");
+        return res.status(200).json({
+                success: true,
+                id: User._id,
+                message: 'User updated!',
+        })
+    })
+    .catch(error => {
+        console.log("FAILURE: " + JSON.stringify(error));
+        return res.status(404).json({
+            error,
+            message: 'User not updated!',
+        })
     })
 }
+
 module.exports = {
     getLoggedIn,
     getQuestion,
