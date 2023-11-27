@@ -1,13 +1,25 @@
 const Map = require('../models/map-model');
 const User = require('../models/user-model');
 const auth = require('../auth');
+const MapPage = require('../models/mappage-model');
 
 createMap = (req, res) => {
-    if (auth.verifyUser(req) === null) {
+    const { title, description, publicStatus,selectedCategory, tags, file } = req.body;
+    user_id = auth.verifyUser(req);
+    console.log("user_id_createmap: " + user_id);
+    if (user_id === null) {
         return res.status(400).json({
             errorMessage: 'UNAUTHORIZED'
         });
     }
+    console.log("passed verify useer")
+    if (!title || !description || !publicStatus || !tags || !selectedCategory|| !file) {
+        return res.status(400).json({
+            success: false,
+            error: 'Invalid input. Please provide all required fields.',
+        });
+    }
+    console.log("passed valid input")
     const body = req.body;
     console.log("createMap body: " + JSON.stringify(body));
     if (!body) {
@@ -17,13 +29,33 @@ createMap = (req, res) => {
         });
     }
 
-    const map = new Map(body);
+    const map = new MapPage({
+        title: title,
+        description: description,
+        publicStatus: publicStatus,
+        tags: tags,
+        
+        // file: file
+        lastModified: Date.now(),
+    });
     console.log("map: " + map.toString());
     if (!map) {
         return res.status(400).json({ success: false, error: err });
     }
 
-    User.findOne({ _id: req.userId }, (err, user) => {
+    User.findOne({ _id: user_id }, (err, user) => {
+        console.log("inside user findone")
+        if (err) {
+            console.log("error: " + err);
+            return res.status(500).json({
+                errorMessage: 'Internal Server Error',
+            });
+        }
+        if (!user) {
+            return res.status(404).json({
+                errorMessage: 'User not found',
+            });
+        }
         console.log("user found: " + JSON.stringify(user));
         user.maps.push(map._id);
         user.save()
@@ -35,10 +67,17 @@ createMap = (req, res) => {
                         });
                     })
                     .catch(error => {
-                        return res.status(400).json({
-                            errorMessage: 'Map Not Created!'
+                        console.log("error: " + error);
+                        return res.status(500).json({
+                            errorMessage: 'Internal Server Error',
                         });
                     });
+            })
+            .catch(error => {
+                console.log("error: " + error);
+                return res.status(500).json({
+                    errorMessage: 'Internal Server Error',
+                });
             });
     });
 };
