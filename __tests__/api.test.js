@@ -48,6 +48,20 @@ describe('Basic PUT Tests', () => {
   });
 });
 
+describe('Basic get question test', () => {
+  it('get /question:email should return 401, no user foundy', async () => {
+    const res = await request(app).get('/auth/question/fakeEmaikl');
+    expect(res.statusCode).toEqual(401);
+    expect(res.body.errorMessage).toEqual("No user found.");
+  });
+});
+describe('Basic update test', () => {
+  it('get /update should return 404, you must provide a body', async () => {
+    const res = await request(app).post('/auth/update');
+    expect(res.statusCode).toEqual(404);
+    expect(res.body.errorMessage).toEqual("User not updated!");
+  });
+});
 // describe('Map POST Tests', () => {
 //   it('POST /api/map/createMap should return a 201 status code', async () => {
 //     const newMapData = {
