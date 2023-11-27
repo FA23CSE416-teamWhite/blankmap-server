@@ -56,10 +56,10 @@ describe('Basic get question test', () => {
   });
 });
 describe('Basic update test', () => {
-  it('get /update should return 404, you must provide a body', async () => {
+  it('get /update should return 400, you must provide a body', async () => {
     const res = await request(app).post('/auth/update');
-    expect(res.statusCode).toEqual(404);
-    expect(res.body.errorMessage).toEqual("User not updated!");
+    expect(res.statusCode).toEqual(400);
+    expect(res.body.errorMessage).toEqual("You must provide a body to update");
   });
 });
 // describe('Map POST Tests', () => {

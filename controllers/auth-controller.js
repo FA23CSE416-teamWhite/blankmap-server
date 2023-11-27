@@ -212,10 +212,10 @@ registerUser = async (req, res) => {
 updateUser = async (req, res) => {
     const body = req.params
     console.log("updateUser: " + JSON.stringify(body));
-    if (Object.keys(res.body).length ==0) {
+    if (Object.keys(req.body).length === 0) {
         return res.status(400).json({
             success: false,
-            error: 'You must provide a body to update',
+            errorMessage: 'You must provide a body to update',
         })
     }
     if(req.body.password){
