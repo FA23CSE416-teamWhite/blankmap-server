@@ -31,7 +31,15 @@ createMap = async (req, res) => {
             mapType: selectedCategory 
         });
 
-        const tagObjects = tags.map(tag => mongoose.Types.ObjectId(tag));
+        const tagObjects = tags.map(tag => {
+            try {
+                return mongoose.Types.ObjectId(tag);
+            } catch (error) {
+                // Handle the case where the tag is not a valid ObjectId
+                console.error(`Invalid tag value: ${tag}`);
+                return null; // Or handle the error as needed
+            }
+        }).filter(tagObject => tagObject !== null);
 
         const map = new MapPage({
             title: title,
