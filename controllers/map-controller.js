@@ -63,9 +63,9 @@ createMap = async (req, res) => {
 
         console.log("user found: " + JSON.stringify(user));
 
-        const ownerId = mongoose.Types.ObjectId(user_id);
+        // const ownerId = mongoose.Types.ObjectId(user_id);
 
-        map.owner = ownerId;
+        map.owner = user;
 
         user.maps.push(map._id);
 
