@@ -6,7 +6,7 @@ const mapSchema = new Schema({
         required: true,
     },
     baseData: {
-        type: Schema.Types.Mixed, // no set type yet
+        type: Buffer, // no set type yet
         required: true,
     },
     mapType: {
@@ -14,4 +14,7 @@ const mapSchema = new Schema({
         required: true,
     },
 })
-module.exports = mongoose.model("Map", mapSchema, "maps")
+
+const Map = mongoose.model('Map', mapSchema); // Define the model directly here
+
+module.exports = Map;

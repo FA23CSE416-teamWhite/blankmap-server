@@ -2,6 +2,7 @@ const express = require('express');
 // const axios = require('axios');
 const MapController = require('../controllers/map-controller');
 const router = express.Router();
+const auth = require('../auth')
 const temp_map = 'https://datavizcatalogue.com/methods/images/top_images/choropleth.png';
 
 // axios.defaults.withCredentials = true;
@@ -17,6 +18,23 @@ const mapsData = [
         mapSnapshot: temp_map,
         createdDate: "10/25/2015",
         upVotes: 10,
+        downVotes: 2,
+        comments: [
+            {
+                user: "cat2",
+                likes: 3,
+                dislikes: 0,
+                comment: "cats on top always",
+                replies: [{ user: "cat42", reply: "always!!"}]
+              },
+              {
+                user: "totallynotDOG",
+                likes: 1,
+                dislikes: 5,
+                comment: "could be better tho",
+                replies: [{ user: "cat69", reply: "stay hating"}],
+              }
+        ],
         numberOfComments: 30,
     },
     {
@@ -27,6 +45,23 @@ const mapsData = [
         mapSnapshot: temp_map,
         createdDate: "12/12/2002",
         upVotes: 9,
+        downVotes: 2,
+        comments: [
+            {
+                user: "cat2",
+                likes: 3,
+                dislikes: 0,
+                comment: "cats on top always",
+                replies: [{ user: "cat42", reply: "always!!"}]
+              },
+              {
+                user: "totallynotDOG",
+                likes: 1,
+                dislikes: 5,
+                comment: "could be better tho",
+                replies: [{ user: "cat69", reply: "stay hating"}],
+              }
+        ],
         numberOfComments: 27,
     },
     {
@@ -37,6 +72,23 @@ const mapsData = [
         mapSnapshot: temp_map,
         createdDate: "05/08/2018",
         upVotes: 9,
+        downVotes: 2,
+        comments: [
+            {
+                user: "cat2",
+                likes: 3,
+                dislikes: 0,
+                comment: "cats on top always",
+                replies: [{ user: "cat42", reply: "always!!"}]
+              },
+              {
+                user: "totallynotDOG",
+                likes: 1,
+                dislikes: 5,
+                comment: "could be better tho",
+                replies: [{ user: "cat69", reply: "stay hating"}],
+              }
+        ],
         numberOfComments: 33,
     },
     {
@@ -47,6 +99,23 @@ const mapsData = [
         mapSnapshot: temp_map,
         createdDate: "08/17/2021",
         upVotes: 10,
+        downVotes: 2,
+        comments: [
+            {
+                user: "cat2",
+                likes: 3,
+                dislikes: 0,
+                comment: "cats on top always",
+                replies: [{ user: "cat42", reply: "always!!"}]
+              },
+              {
+                user: "totallynotDOG",
+                likes: 1,
+                dislikes: 5,
+                comment: "could be better tho",
+                replies: [{ user: "cat69", reply: "stay hating"}],
+              }
+        ],
         numberOfComments: 45,
     },
     {
@@ -57,6 +126,23 @@ const mapsData = [
         mapSnapshot: temp_map,
         createdDate: "03/02/2019",
         upVotes: 13,
+        downVotes: 2,
+        comments: [
+            {
+                user: "cat2",
+                likes: 3,
+                dislikes: 0,
+                comment: "cats on top always",
+                replies: [{ user: "cat42", reply: "always!!"}]
+              },
+              {
+                user: "totallynotDOG",
+                likes: 1,
+                dislikes: 5,
+                comment: "could be better tho",
+                replies: [{ user: "cat69", reply: "stay hating"}],
+              }
+        ],
         numberOfComments: 23,
     },
     {
@@ -67,6 +153,23 @@ const mapsData = [
         mapSnapshot: temp_map,
         createdDate: "06/14/2005",
         upVotes: 7,
+        downVotes: 2,
+        comments: [
+            {
+                user: "cat2",
+                likes: 3,
+                dislikes: 0,
+                comment: "cats on top always",
+                replies: [{ user: "cat42", reply: "always!!"}]
+              },
+              {
+                user: "totallynotDOG",
+                likes: 1,
+                dislikes: 5,
+                comment: "could be better tho",
+                replies: [{ user: "cat69", reply: "stay hating"}],
+              }
+        ],
         numberOfComments: 16,
     },
     {
@@ -77,6 +180,23 @@ const mapsData = [
         mapSnapshot: temp_map,
         createdDate: "09/30/2017",
         upVotes: 10,
+        downVotes: 2,
+        comments: [
+            {
+                user: "cat2",
+                likes: 3,
+                dislikes: 0,
+                comment: "cats on top always",
+                replies: [{ user: "cat42", reply: "always!!"}]
+              },
+              {
+                user: "totallynotDOG",
+                likes: 1,
+                dislikes: 5,
+                comment: "could be better tho",
+                replies: [{ user: "cat69", reply: "stay hating"}],
+              }
+        ],
         numberOfComments: 30,
     },
     {
@@ -87,6 +207,23 @@ const mapsData = [
         mapSnapshot: temp_map,
         createdDate: "07/08/2014",
         upVotes: 11,
+        downVotes: 2,
+        comments: [
+            {
+                user: "cat2",
+                likes: 3,
+                dislikes: 0,
+                comment: "cats on top always",
+                replies: [{ user: "cat42", reply: "always!!"}]
+              },
+              {
+                user: "totallynotDOG",
+                likes: 1,
+                dislikes: 5,
+                comment: "could be better tho",
+                replies: [{ user: "cat69", reply: "stay hating"}],
+              }
+        ],
         numberOfComments: 23,
     },
     {
@@ -97,6 +234,23 @@ const mapsData = [
         mapSnapshot: temp_map,
         createdDate: "11/19/2019",
         upVotes: 1,
+        downVotes: 2,
+        comments: [
+            {
+                user: "cat2",
+                likes: 3,
+                dislikes: 0,
+                comment: "cats on top always",
+                replies: [{ user: "cat42", reply: "always!!"}]
+              },
+              {
+                user: "totallynotDOG",
+                likes: 1,
+                dislikes: 5,
+                comment: "could be better tho",
+                replies: [{ user: "cat69", reply: "stay hating"}],
+              }
+        ],
         numberOfComments: 70,
     },
     {
@@ -107,6 +261,23 @@ const mapsData = [
         mapSnapshot: temp_map,
         createdDate: "04/27/2016",
         upVotes: 10,
+        downVotes: 2,
+        comments: [
+            {
+                user: "cat2",
+                likes: 3,
+                dislikes: 0,
+                comment: "cats on top always",
+                replies: [{ user: "cat42", reply: "always!!"}]
+              },
+              {
+                user: "totallynotDOG",
+                likes: 1,
+                dislikes: 5,
+                comment: "could be better tho",
+                replies: [{ user: "cat69", reply: "stay hating"}],
+              }
+        ],
         numberOfComments: 30,
     },
     {
@@ -117,6 +288,23 @@ const mapsData = [
         mapSnapshot: temp_map,
         createdDate: "10/25/2015",
         upVotes: 14,
+        downVotes: 2,
+        comments: [
+            {
+                user: "cat2",
+                likes: 3,
+                dislikes: 0,
+                comment: "cats on top always",
+                replies: [{ user: "cat42", reply: "always!!"}]
+              },
+              {
+                user: "totallynotDOG",
+                likes: 1,
+                dislikes: 5,
+                comment: "could be better tho",
+                replies: [{ user: "cat69", reply: "stay hating"}],
+              }
+        ],
         numberOfComments: 20,
     },
     {
@@ -127,6 +315,23 @@ const mapsData = [
         mapSnapshot: temp_map,
         createdDate: "12/12/2002",
         upVotes: 12,
+        downVotes: 2,
+        comments: [
+            {
+                user: "cat2",
+                likes: 3,
+                dislikes: 0,
+                comment: "cats on top always",
+                replies: [{ user: "cat42", reply: "always!!"}]
+              },
+              {
+                user: "totallynotDOG",
+                likes: 1,
+                dislikes: 5,
+                comment: "could be better tho",
+                replies: [{ user: "cat69", reply: "stay hating"}],
+              }
+        ],
         numberOfComments: 24,
     },
     {
@@ -137,6 +342,23 @@ const mapsData = [
         mapSnapshot: temp_map,
         createdDate: "05/08/2018",
         upVotes: 10,
+        downVotes: 2,
+        comments: [
+            {
+                user: "cat2",
+                likes: 3,
+                dislikes: 0,
+                comment: "cats on top always",
+                replies: [{ user: "cat42", reply: "always!!"}]
+              },
+              {
+                user: "totallynotDOG",
+                likes: 1,
+                dislikes: 5,
+                comment: "could be better tho",
+                replies: [{ user: "cat69", reply: "stay hating"}],
+              }
+        ],
         numberOfComments: 27,
     },
     {
@@ -147,6 +369,23 @@ const mapsData = [
         mapSnapshot: temp_map,
         createdDate: "08/17/2021",
         upVotes: 10,
+        downVotes: 2,
+        comments: [
+            {
+                user: "cat2",
+                likes: 3,
+                dislikes: 0,
+                comment: "cats on top always",
+                replies: [{ user: "cat42", reply: "always!!"}]
+              },
+              {
+                user: "totallynotDOG",
+                likes: 1,
+                dislikes: 5,
+                comment: "could be better tho",
+                replies: [{ user: "cat69", reply: "stay hating"}],
+              }
+        ],
         numberOfComments: 30,
     },
     {
@@ -157,6 +396,23 @@ const mapsData = [
         mapSnapshot: temp_map,
         createdDate: "03/02/2019",
         upVotes: 10,
+        downVotes: 2,
+        comments: [
+            {
+                user: "cat2",
+                likes: 3,
+                dislikes: 0,
+                comment: "cats on top always",
+                replies: [{ user: "cat42", reply: "always!!"}]
+              },
+              {
+                user: "totallynotDOG",
+                likes: 1,
+                dislikes: 5,
+                comment: "could be better tho",
+                replies: [{ user: "cat69", reply: "stay hating"}],
+              }
+        ],
         numberOfComments: 30,
     },
     {
@@ -167,6 +423,23 @@ const mapsData = [
         mapSnapshot: temp_map,
         createdDate: "06/14/2005",
         upVotes: 10,
+        downVotes: 2,
+        comments: [
+            {
+                user: "cat2",
+                likes: 3,
+                dislikes: 0,
+                comment: "cats on top always",
+                replies: [{ user: "cat42", reply: "always!!"}]
+              },
+              {
+                user: "totallynotDOG",
+                likes: 1,
+                dislikes: 5,
+                comment: "could be better tho",
+                replies: [{ user: "cat69", reply: "stay hating"}],
+              }
+        ],
         numberOfComments: 30,
     },
     {
@@ -177,6 +450,23 @@ const mapsData = [
         mapSnapshot: temp_map,
         createdDate: "09/30/2017",
         upVotes: 10,
+        downVotes: 2,
+        comments: [
+            {
+                user: "cat2",
+                likes: 3,
+                dislikes: 0,
+                comment: "cats on top always",
+                replies: [{ user: "cat42", reply: "always!!"}]
+              },
+              {
+                user: "totallynotDOG",
+                likes: 1,
+                dislikes: 5,
+                comment: "could be better tho",
+                replies: [{ user: "cat69", reply: "stay hating"}],
+              }
+        ],
         numberOfComments: 30,
     },
     {
@@ -187,6 +477,23 @@ const mapsData = [
         mapSnapshot: temp_map,
         createdDate: "07/08/2014",
         upVotes: 10,
+        downVotes: 2,
+        comments: [
+            {
+                user: "cat2",
+                likes: 3,
+                dislikes: 0,
+                comment: "cats on top always",
+                replies: [{ user: "cat42", reply: "always!!"}]
+              },
+              {
+                user: "totallynotDOG",
+                likes: 1,
+                dislikes: 5,
+                comment: "could be better tho",
+                replies: [{ user: "cat69", reply: "stay hating"}],
+              }
+        ],
         numberOfComments: 30,
     },
     {
@@ -197,6 +504,23 @@ const mapsData = [
         mapSnapshot: temp_map,
         createdDate: "11/19/2019",
         upVotes: 10,
+        downVotes: 2,
+        comments: [
+            {
+                user: "cat2",
+                likes: 3,
+                dislikes: 0,
+                comment: "cats on top always",
+                replies: [{ user: "cat42", reply: "always!!"}]
+              },
+              {
+                user: "totallynotDOG",
+                likes: 1,
+                dislikes: 5,
+                comment: "could be better tho",
+                replies: [{ user: "cat69", reply: "stay hating"}],
+              }
+        ],
         numberOfComments: 30,
     },
     {
@@ -207,17 +531,34 @@ const mapsData = [
         mapSnapshot: temp_map,
         createdDate: "04/27/2016",
         upVotes: 10,
+        downVotes: 2,
+        comments: [
+            {
+                user: "cat2",
+                likes: 3,
+                dislikes: 0,
+                comment: "cats on top always",
+                replies: [{ user: "cat42", reply: "always!!"}]
+              },
+              {
+                user: "totallynotDOG",
+                likes: 1,
+                dislikes: 5,
+                comment: "could be better tho",
+                replies: [{ user: "cat69", reply: "stay hating"}],
+              }
+        ],
         numberOfComments: 30,
     },
 ];
 // Endpoint to fetch maps with a query parameter
 router.get('/maps', (req, res) => {
     const { q } = req.query;
-    console.log('q:', q);
+    // console.log('q:', q);
     const qExtract = q.replace(/^"(.*)"$/, '$1');
-    console.log('q:', qExtract);
-    console.log('q.trim():', qExtract.trim());
-    console.log(qExtract.trim().length)
+    // console.log('q:', qExtract);
+    // console.log('q.trim():', qExtract.trim());
+    // console.log(qExtract.trim().length)
     try {
         // If q is null or empty, return all maps
         if (qExtract === null || qExtract === undefined || qExtract.trim() === "") {
@@ -239,4 +580,5 @@ router.get('/maps', (req, res) => {
     }
 });
 router.post('/createMap', MapController.createMap);
+router.put('/updateMapPage:id', auth.verify, MapController.updateMapPage);
 module.exports = router;
