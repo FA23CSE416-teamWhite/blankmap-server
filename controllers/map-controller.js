@@ -2,6 +2,7 @@ const Map = require('../models/map-model');
 const User = require('../models/user-model');
 const auth = require('../auth');
 const MapPage = require('../models/mappage-model');
+const mongoose = require('mongoose');
 
 createMap = async (req, res) => {
     try {
