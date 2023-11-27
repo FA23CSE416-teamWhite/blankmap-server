@@ -2,6 +2,7 @@ const express = require('express');
 // const axios = require('axios');
 const MapController = require('../controllers/map-controller');
 const router = express.Router();
+const auth = require('../auth')
 const temp_map = 'https://datavizcatalogue.com/methods/images/top_images/choropleth.png';
 
 // axios.defaults.withCredentials = true;
@@ -239,5 +240,5 @@ router.get('/maps', (req, res) => {
     }
 });
 router.post('/createMap', MapController.createMap);
-router.put('/updateMapPage', MapController.updateMapPage);
+router.put('/updateMapPage:id', auth.verify, MapController.updateMapPage);
 module.exports = router;
