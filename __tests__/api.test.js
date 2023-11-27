@@ -51,9 +51,10 @@ describe('Basic PUT Tests', () => {
 // describe('Map POST Tests', () => {
 //   it('POST /api/map/createMap should return a 201 status code', async () => {
 //     const newMapData = {
-//       title: 'Example Map',
+//       title: 'JEST Example Map',
 //       description: 'This is an example map.',
 //       publicStatus: true,
+//       selectedCategory: 'choropleth',
 //       tags: ['tag1', 'tag2'],
 //       file: 'https://datavizcatalogue.com/methods/images/top_images/choropleth.png',
 //     };

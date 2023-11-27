@@ -3,6 +3,7 @@ const User = require('../models/user-model');
 const auth = require('../auth');
 const MapPage = require('../models/mappage-model');
 const mongoose = require('mongoose');
+const { v4: uuidv4 } = require('uuid'); 
 
 createMap = async (req, res) => {
     try {
@@ -23,6 +24,7 @@ createMap = async (req, res) => {
             });
         }
         const bufferData = Buffer.from(JSON.stringify(file));
+        const mapId = uuidv4();
         console.log("passed valid input");
         const mapData = new Map({
             addedFeatures: [{ }],
@@ -45,6 +47,7 @@ createMap = async (req, res) => {
             description: description,
             publicStatus: publicStatus,
             tags: tagObjects,
+            mapId: mapId, 
             map: mapData, 
             lastModified: Date.now(),
         });
