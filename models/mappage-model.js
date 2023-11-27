@@ -70,10 +70,6 @@ const MapPageSchema = new mongoose.Schema({
     default: 0,
   }, // Number of downvotes
 });
-
-// const MapPage = mongoose.model('MapPage', MapPageSchema, 'mappages');
-
-// module.exports = { MapPage };
 const MapPage = mongoose.model('MapPage', MapPageSchema); // Define the model directly here
 
 module.exports = MapPage;
