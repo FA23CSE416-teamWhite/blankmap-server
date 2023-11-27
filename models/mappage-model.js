@@ -23,6 +23,12 @@ const MapPageSchema = new mongoose.Schema({
     type: Date,
   }, // Date that the map was previously modified
 
+  mapId: {
+    type: Number,
+    required: [true, 'Map ID is required'],
+    unique: true,
+  }, // Id number of this map
+
   map: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Map',

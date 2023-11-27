@@ -24,6 +24,7 @@ createMap = async (req, res) => {
             });
         }
         const bufferData = Buffer.from(JSON.stringify(file));
+        const mapId =0;
         console.log("passed valid input");
         const mapData = new Map({
             addedFeatures: [{ }],
@@ -46,6 +47,7 @@ createMap = async (req, res) => {
             description: description,
             publicStatus: publicStatus,
             tags: tagObjects,
+            mapId: mapId, 
             map: mapData, 
             lastModified: Date.now(),
         });
