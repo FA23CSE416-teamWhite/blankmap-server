@@ -15,7 +15,7 @@ createMap = async (req, res) => {
                 errorMessage: 'UNAUTHORIZED'
             });
         }
-
+        
         // Check for missing fields
         if (!title || !description || !publicStatus || !tags || !selectedCategory || !file) {
             return res.status(400).json({
@@ -49,7 +49,7 @@ createMap = async (req, res) => {
             map: mapData, 
             lastModified: Date.now(),
         });
-
+        console.log(map.mapId)
         if (!map) {
             return res.status(400).json({ success: false, error: 'Failed to create map' });
         }
