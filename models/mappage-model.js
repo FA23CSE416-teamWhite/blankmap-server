@@ -25,7 +25,6 @@ const MapPageSchema = new mongoose.Schema({
 
   mapId: {
     type: Number,
-    required: [true, 'Map ID is required'],
     unique: true,
   }, // Id number of this map
 
@@ -70,7 +69,7 @@ const MapPageSchema = new mongoose.Schema({
     default: 0,
   }, // Number of downvotes
 });
-MapPageSchema.plugin(AutoIncrement, { inc_field: 'mapId' });
+MapPageSchema.plugin(AutoIncrement, { id: 'mapId_seq', inc_field: 'mapId' });
 const MapPage = mongoose.model('MapPage', MapPageSchema); // Define the model directly here
 
 module.exports = MapPage;
