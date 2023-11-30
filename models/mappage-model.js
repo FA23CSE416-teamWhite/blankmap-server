@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const AutoIncrement = require('mongoose-sequence')(mongoose);
 const MapPageSchema = new mongoose.Schema({
   comments: [
     {
@@ -22,11 +21,6 @@ const MapPageSchema = new mongoose.Schema({
   lastModified: {
     type: Date,
   }, // Date that the map was previously modified
-
-  mapId: {
-    type: Number,
-    unique: true,
-  }, // Id number of this map
 
   map: {
     type: mongoose.Schema.Types.ObjectId,
@@ -69,7 +63,6 @@ const MapPageSchema = new mongoose.Schema({
     default: 0,
   }, // Number of downvotes
 });
-MapPageSchema.plugin(AutoIncrement, { id: 'mapId_seq', inc_field: 'mapId' });
 const MapPage = mongoose.model('MapPage', MapPageSchema); // Define the model directly here
 
 module.exports = MapPage;
