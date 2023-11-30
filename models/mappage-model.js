@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const AutoIncrement = require('mongoose-sequence')(mongoose);
 const MapPageSchema = new mongoose.Schema({
   comments: [
     {
@@ -70,7 +70,7 @@ const MapPageSchema = new mongoose.Schema({
     default: 0,
   }, // Number of downvotes
 });
-
+MapPageSchema.plugin(AutoIncrement, { inc_field: 'mapId' });
 const MapPage = mongoose.model('MapPage', MapPageSchema); // Define the model directly here
 
 module.exports = MapPage;
