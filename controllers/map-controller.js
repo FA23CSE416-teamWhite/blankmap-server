@@ -120,7 +120,7 @@ getMapPages = async (req, res) => {
         return res.status(200).json({ success: true, data: mappages })
     }).catch(err => console.log(err))
 }
-//gets the mappages with id
+//gets the mappages of the user
 getMapPagePairs = async (req, res) => {
     if(auth.verifyUser(req) === null){
         return res.status(400).json({
@@ -171,6 +171,51 @@ getMapPagePairs = async (req, res) => {
         asyncFindMapPages(user);
     }).catch(err => console.log(err))
 }
+//get all public maps only
+getPublicMapPagePairs = async (req, res) => {
+    if(auth.verifyUser(req) === null){
+        return res.status(400).json({
+            errorMessage: 'UNAUTHORIZED'
+        })
+    }
+    await MapPage.find({ publicStatus: true }, (err, mappages) => {
+        console.log("found Mappages: " + JSON.stringify(mappages));
+        if (err) {
+            return res.status(400).json({ success: false, error: err })
+        }
+        if (!mappages) {
+            console.log("!mappages.length");
+            return res
+                .status(404)
+                .json({ success: false, error: 'Mappages not found' })
+        }
+        else {
+            console.log("Send the Mappages pairs");
+            // PUT ALL THE LISTS INTO ID, NAME PAIRS
+            let pairs = [];
+            for (let key in mappages) {
+                let pages = mappages[key];
+                let pair = {
+                    _id: pages._id,
+                    title: pages.title,
+                    downvotes: pages.downvotes,
+                    upvotes: pages.upvotes,
+                    tags: pages.tags,
+                    publicStatus: pages.publicStatus,
+                    comments: pages.comments,
+                    owner: pages.owner,
+                    map: pages.map,
+                    lastModified: pages.lastModified,
+                    description: pages.description,
+                    creationDate: pages.creationDate,
+                };
+                pairs.push(pair);
+            }
+            return res.status(200).json({ success: true, idNamePairs: pairs })
+        }
+    }).catch(err => console.log(err))
+}
+//get map pages based on mappage id
 getMapPageById = async (req, res) => {
     if(auth.verifyUser(req) === null){
         return res.status(400).json({
@@ -263,5 +308,6 @@ module.exports = {
     getMapPages,
     getMapPagePairs,
     getMapPageById,
+    getPublicMapPagePairs,
     // Add other map-related functions here
 };
