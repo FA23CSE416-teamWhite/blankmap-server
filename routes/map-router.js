@@ -581,4 +581,7 @@ router.get('/maps', (req, res) => {
 });
 router.post('/createMap', MapController.createMap);
 router.put('/updateMapPage:id', auth.verify, MapController.updateMapPage);
+router.get('/mappagepairs', auth.verify, MapController.getMapPagePairs);
+router.get('/mappages', auth.verify, MapController.getMapPages)
+router.get('/mappage/:id', auth.verify, MapController.getMapPageById)
 module.exports = router;

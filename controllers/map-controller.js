@@ -101,7 +101,99 @@ deleteMap = async (req, res) => {
         }).catch(err => console.log(err));
     });
 };
+//gets all the mappages
+getMapPages = async (req, res) => {
+    if(auth.verifyUser(req) === null){
+        return res.status(400).json({
+            errorMessage: 'UNAUTHORIZED'
+        })
+    }
+    await MapPage.find({}, (err, mappages) => {
+        if (err) {
+            return res.status(400).json({ success: false, error: err })
+        }
+        if (!mappages.length) {
+            return res
+                .status(404)
+                .json({ success: false, error: `Mappages not found` })
+        }
+        return res.status(200).json({ success: true, data: mappages })
+    }).catch(err => console.log(err))
+}
+//gets the mappages with id
+getMapPagePairs = async (req, res) => {
+    if(auth.verifyUser(req) === null){
+        return res.status(400).json({
+            errorMessage: 'UNAUTHORIZED'
+        })
+    }
+    await User.findOne({ _id: req.userId }, (err, user) => {
+        console.log("find user with id " + req.userId);
+        async function asyncFindMapPages(user) {
+            console.log("find all Mappages owned by " + user.userName);
+            await MapPage.find({ user: user }, (err, mappages) => {
+                console.log("found Mappages: " + JSON.stringify(mappages));
+                if (err) {
+                    return res.status(400).json({ success: false, error: err })
+                }
+                if (!mappages) {
+                    console.log("!mappages.length");
+                    return res
+                        .status(404)
+                        .json({ success: false, error: 'Mappages not found' })
+                }
+                else {
+                    console.log("Send the Mappages pairs");
+                    // PUT ALL THE LISTS INTO ID, NAME PAIRS
+                    let pairs = [];
+                    for (let key in mappages) {
+                        let pages = mappages[key];
+                        let pair = {
+                            _id: pages._id,
+                            title: pages.title,
+                            downvotes: pages.downvotes,
+                            upvotes: pages.upvotes,
+                            tags: pages.tags,
+                            publicStatus: pages.publicStatus,
+                            comments: pages.comments,
+                            owner: pages.owner,
+                            map: pages.map,
+                            lastModified: pages.lastModified,
+                            description: pages.description,
+                            creationDate: pages.creationDate,
+                        };
+                        pairs.push(pair);
+                    }
+                    return res.status(200).json({ success: true, idNamePairs: pairs })
+                }
+            }).catch(err => console.log(err))
+        }
+        asyncFindMapPages(user);
+    }).catch(err => console.log(err))
+}
+getMapPageById = async (req, res) => {
+    if(auth.verifyUser(req) === null){
+        return res.status(400).json({
+            errorMessage: 'UNAUTHORIZED'
+        })
+    }
+    console.log("Find Mappage with id: " + JSON.stringify(req.params.id));
 
+    await MapPage.findById({ _id: req.params.id }, (err, mappage) => {
+        if (err) {
+            return res.status(400).json({ success: false, error: err });
+        }
+        console.log("Found mappage: " + JSON.stringify(mappage));
+
+        // DOES THIS Mappage BELONG TO THIS USER?
+        async function asyncFindUser(mappage) {
+            await User.findOne({ userName: mappage.owner.userName }, (err, user) => {
+                return res.status(200).json({ success: true, mappage: mappage })
+            });
+        }
+        asyncFindUser(mappage);
+    }).catch(err => console.log(err))
+}
 updateMapPage = async (req, res) => {
     if (auth.verifyUser(req) === null) {
         return res.status(400).json({
@@ -126,11 +218,10 @@ updateMapPage = async (req, res) => {
                 message: 'MapPage not found!',
             })
         }
-        // DOES THIS LIST BELONG TO THIS USER?
+        // DOES THIS MAP BELONG TO THIS USER?
         async function asyncFindUser(mappage) {
-            await User.findOne({ userName: mappage.owner }, (err, user) => {
+            await User.findOne({ userName: mappage.owner.userName }, (err, user) => {
                     console.log("correct user!");
-                    console.log("req.body.name: " + req.body.name);
 
                     mappage.comments = body.mappage.comments;
                     mappage.description = body.mappage.description;
@@ -169,5 +260,8 @@ module.exports = {
     createMap,
     deleteMap,
     updateMapPage,
+    getMapPages,
+    getMapPagePairs,
+    getMapPageById,
     // Add other map-related functions here
 };
