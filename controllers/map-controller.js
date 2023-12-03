@@ -131,7 +131,7 @@ getMapPagePairs = async (req, res) => {
         console.log("find user with id " + req.userId);
         async function asyncFindMapPages(user) {
             console.log("find all Mappages owned by " + user.userName);
-            await MapPage.find({ user: user }, (err, mappages) => {
+            await MapPage.find({ owner: user }, (err, mappages) => {
                 console.log("found Mappages: " + JSON.stringify(mappages));
                 if (err) {
                     return res.status(400).json({ success: false, error: err })
@@ -217,7 +217,10 @@ getPublicMapPagePairs = async (req, res) => {
 }
 //get map pages based on mappage id
 getMapPageById = async (req, res) => {
+    console.log(req.params)
+    console.log(req.body)
     if(auth.verifyUser(req) === null){
+        console.log("verify user issue")
         return res.status(400).json({
             errorMessage: 'UNAUTHORIZED'
         })
@@ -226,6 +229,7 @@ getMapPageById = async (req, res) => {
 
     await MapPage.findById({ _id: req.params.id }, (err, mappage) => {
         if (err) {
+            console.log("find map by id issue")
             return res.status(400).json({ success: false, error: err });
         }
         console.log("Found mappage: " + JSON.stringify(mappage));
