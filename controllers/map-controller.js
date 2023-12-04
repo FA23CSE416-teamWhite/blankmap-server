@@ -26,7 +26,7 @@ createMap = async (req, res) => {
             });
         }
         const bufferData = Buffer.from(JSON.stringify(file));
-       
+        console.log("BUFFER DATA: " + bufferData)
         console.log("passed valid input");
         const mapData = new Map({
             addedFeatures: [{ }],
@@ -161,6 +161,7 @@ getMapPagePairs = async (req, res) => {
             const mapData = await Map.findById(page.map); // Fetch map data using the ID stored in MapPage
             let jsonData=null;
             if(mapData!=null){
+                
                 const bufferString = mapData.baseData.toString('utf8');
 
                 // Parse string to JSON object
