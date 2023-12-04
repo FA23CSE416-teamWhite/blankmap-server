@@ -154,7 +154,7 @@ getMapPagePairs = async (req, res) => {
 
         if (!mappages || mappages.length === 0) {
             console.log("!mappages.length");
-            return res.status(404).json({ success: false, error: 'Mappages not found' });
+            return res.status(200).json({ success: true, mappages});
         }
 
         const idNamePairs = mappages.map(page => ({
