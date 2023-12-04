@@ -1,10 +1,33 @@
 const mongoose = require('mongoose');
 const MapPageSchema = new mongoose.Schema({
   comments: [
+    // {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: 'Comment',
+    // },
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Comment',
-    },
+      commenter: {
+          type: String, // Assuming commenter's name or identifier is a string
+          required: true,
+      },
+      commentId: {
+          type: Number,
+          required: true
+      },
+      content: {
+          type: String,
+          required: true
+      },
+      likes: {
+          type: Number,
+          required: true
+      },
+      dislikes: {
+          type: Number,
+          required: true
+      },
+      replies: [], // Array of replies (each reply can be an object with similar properties)
+    }
   ], // Array of comments on this map
 
   creationDate: {
