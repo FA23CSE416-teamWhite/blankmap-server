@@ -157,22 +157,24 @@ getMapPagePairs = async (req, res) => {
             return res.status(200).json({ success: false, mappages});
         }
         
-        const idNamePairs = mappages.map(page => ({
-            _id: page._id,
-            title: page.title,
-            downvotes: page.downvotes,
-            upvotes: page.upvotes,
-            tags: page.tags,
-            publicStatus: page.publicStatus,
-            comments: page.comments,
-            owner: user.userName,
-            mapSnapshot: temp_map,
-            map: page.map,
-            mapData:page.map.baseData,
-            mapType: page.map.mapType,
-            lastModified: page.lastModified.toLocaleDateString(),
-            description: page.description,
-            creationDate: page.creationDate.toLocaleDateString(),
+        const idNamePairs = await Promise.all(mappages.map(async page => {
+            const mapData = await Map.findById(page.map); // Fetch map data using the ID stored in MapPage
+
+            return {
+                _id: page._id,
+                title: page.title,
+                downvotes: page.downvotes,
+                upvotes: page.upvotes,
+                tags: page.tags,
+                publicStatus: page.publicStatus,
+                comments: page.comments,
+                owner: user.userName,
+                mapSnapshot: temp_map,
+                map: mapData, 
+                lastModified: page.lastModified.toLocaleDateString(),
+                description: page.description,
+                creationDate: page.creationDate.toLocaleDateString(),
+            };
         }));
 
         console.log("Send the Mappages pairs");
