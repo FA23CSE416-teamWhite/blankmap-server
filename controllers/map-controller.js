@@ -168,6 +168,8 @@ getMapPagePairs = async (req, res) => {
             owner: user.userName,
             mapSnapshot: temp_map,
             map: page.map,
+            mapData:page.map.baseData,
+            mapType: page.map.mapType,
             lastModified: page.lastModified.toLocaleDateString(),
             description: page.description,
             creationDate: page.creationDate.toLocaleDateString(),
