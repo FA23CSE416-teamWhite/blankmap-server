@@ -41,11 +41,10 @@ const MapPageSchema = new mongoose.Schema({
 
   tags: [
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Tag',
+      type: String,
       required: [true, 'At least one tag is required'],
     },
-  ], // Tags of map indicating the general kind of map
+  ],
 
   title: {
     type: String,
