@@ -205,6 +205,7 @@ getPublicMapPagePairs = async (req, res) => {
                 downvotes: pages.downvotes,
                 upvotes: pages.upvotes,
                 tags: pages.tags,
+                mapSnapshot: temp_map,
                 publicStatus: pages.publicStatus,
                 comments: pages.comments,
                 owner: pages.owner,
