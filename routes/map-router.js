@@ -581,8 +581,8 @@ const mapsData = [
 // });
 router.get('/maps', MapController.searchMapPages);
 router.post('/createMap', MapController.createMap);
-router.put('/updateMapPage:id', auth.verify, MapController.updateMapPage);
-router.put('/updateMapPageGeneral:id', auth.verify, MapController.updateMapPageGeneral);
+router.put('/updateMapPage/:id', auth.verify, MapController.updateMapPage);
+router.put('/updateMapPageGeneral/:id', auth.verify, MapController.updateMapPageGeneral);
 router.get('/mappagepairs', auth.verify, MapController.getMapPagePairs);
 router.get('/mappages', auth.verify, MapController.getMapPages)
 router.get('/mappage/:id', auth.verify, MapController.getMapPageById)
