@@ -148,7 +148,7 @@ getMapPagePairs = async (req, res) => {
         }
 
         console.log("find all Mappages owned by " + user.userName);
-        const mappages = await MapPage.find({ owner: user });
+        const mappages = await MapPage.find({ owner: user }).sort({ creationDate: -1 });
 
         console.log("found Mappages: " + JSON.stringify(mappages));
 
