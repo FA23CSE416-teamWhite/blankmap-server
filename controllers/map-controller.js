@@ -315,7 +315,7 @@ updateMapPage = async (req, res) => {
             });
         }
 
-        const body = req.body;
+        const body = req.body.mappage;
         console.log("body: ", body)
         console.log("updateMappage: " + JSON.stringify(body));
         console.log("req.body.title: " + body.title);
