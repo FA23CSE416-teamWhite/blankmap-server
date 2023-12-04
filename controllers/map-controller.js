@@ -33,13 +33,13 @@ createMap = async (req, res) => {
             baseData: bufferData ,
             mapType: selectedCategory 
         });
-
+        const savedMapData = await mapData.save();
         const map = new MapPage({
             title: title,
             description: description,
             publicStatus: publicStatus,
             tags: tags, 
-            map: mapData, 
+            map: savedMapData, 
             lastModified: Date.now(),
         });
 
@@ -156,7 +156,7 @@ getMapPagePairs = async (req, res) => {
             console.log("!mappages.length");
             return res.status(200).json({ success: false, mappages});
         }
-
+        
         const idNamePairs = mappages.map(page => ({
             _id: page._id,
             title: page.title,
