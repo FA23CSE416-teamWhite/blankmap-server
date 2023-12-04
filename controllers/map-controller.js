@@ -398,6 +398,11 @@ searchMapPages = async (req, res) => {
             console.log('Search query:', qExtract);
         }
         console.log('Maps found:', maps)
+        maps = maps.sort((a, b) => {
+            const dateA = new Date(a.creationDate);
+            const dateB = new Date(b.creationDate);
+            return dateB - dateA;
+        });
 
         const transformedMaps = maps.map(map => ({
             id: map._id,
