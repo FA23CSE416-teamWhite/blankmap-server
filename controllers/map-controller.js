@@ -402,12 +402,12 @@ searchMapPages = async (req, res) => {
             id: map._id,
             title: map.title,
             description: map.description,
-            author: map.owner.userName,
+            owner: map.owner.userName,
             tags: map.tags,
             mapSnapshot: temp_map, //need to include actual snapshot
-            createdDate: new Date(map.creationDate).toLocaleDateString(),
-            upVotes: map.upVotes,
-            downVotes: map.downVotes,
+            creationDate: new Date(map.creationDate).toLocaleDateString(),
+            upvotes: map.upvotes,
+            downvotes: map.downvotes,
             comments: map.comments.map(comment => ({ 
                 user: comment.user,
                 likes: comment.likes,
