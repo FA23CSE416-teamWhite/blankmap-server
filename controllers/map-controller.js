@@ -167,7 +167,7 @@ getMapPagePairs = async (req, res) => {
                 jsonData = JSON.parse(bufferString);}
             
             return {
-                _id: page._id,
+                id: page._id,
                 title: page.title,
                 downvotes: page.downvotes,
                 upvotes: page.upvotes,
