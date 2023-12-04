@@ -552,33 +552,34 @@ const mapsData = [
     },
 ];
 // Endpoint to fetch maps with a query parameter
-router.get('/maps', (req, res) => {
-    const { q } = req.query;
-    // console.log('q:', q);
-    const qExtract = q.replace(/^"(.*)"$/, '$1');
-    // console.log('q:', qExtract);
-    // console.log('q.trim():', qExtract.trim());
-    // console.log(qExtract.trim().length)
-    try {
-        // If q is null or empty, return all maps
-        if (qExtract === null || qExtract === undefined || qExtract.trim() === "") {
-            res.json(mapsData);
-            console.log('No search query');
-        } else {
-            // Perform a case-insensitive search on the title and description fields
-            const filteredMaps = mapsData.filter((map) => (
-                map.title.toLowerCase().includes(qExtract.toLowerCase()) ||
-                map.description.toLowerCase().includes(qExtract.toLowerCase()) ||
-                map.author.toLowerCase().includes(qExtract.toLowerCase())
-            ));
-            console.log('Search query:', qExtract);
-            res.json(filteredMaps);
-        }
-    } catch (error) {
-        console.error('Error fetching maps:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-});
+// router.get('/maps', (req, res) => {
+//     const { q } = req.query;
+//     // console.log('q:', q);
+//     const qExtract = q.replace(/^"(.*)"$/, '$1');
+//     // console.log('q:', qExtract);
+//     // console.log('q.trim():', qExtract.trim());
+//     // console.log(qExtract.trim().length)
+//     try {
+//         // If q is null or empty, return all maps
+//         if (qExtract === null || qExtract === undefined || qExtract.trim() === "") {
+//             res.json(mapsData);
+//             console.log('No search query');
+//         } else {
+//             // Perform a case-insensitive search on the title and description fields
+//             const filteredMaps = mapsData.filter((map) => (
+//                 map.title.toLowerCase().includes(qExtract.toLowerCase()) ||
+//                 map.description.toLowerCase().includes(qExtract.toLowerCase()) ||
+//                 map.author.toLowerCase().includes(qExtract.toLowerCase())
+//             ));
+//             console.log('Search query:', qExtract);
+//             res.json(filteredMaps);
+//         }
+//     } catch (error) {
+//         console.error('Error fetching maps:', error);
+//         res.status(500).json({ error: 'Internal Server Error' });
+//     }
+// });
+router.get('/maps', MapController.searchMapPages);
 router.post('/createMap', MapController.createMap);
 router.put('/updateMapPage:id', auth.verify, MapController.updateMapPage);
 router.get('/mappagepairs', auth.verify, MapController.getMapPagePairs);

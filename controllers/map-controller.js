@@ -3,6 +3,8 @@ const User = require('../models/user-model');
 const auth = require('../auth');
 const MapPage = require('../models/mappage-model');
 const mongoose = require('mongoose');
+const { search } = require('../routes/map-router');
+const temp_map = 'https://datavizcatalogue.com/methods/images/top_images/choropleth.png';
 
 
 createMap = async (req, res) => {
@@ -300,7 +302,58 @@ updateMapPage = async (req, res) => {
     })
 };
 // Similar functions for other map-related endpoints
+searchMapPages = async (req, res) => {
+    const { q } = req.query;
+    const qExtract = q.replace(/^"(.*)"$/, '$1');
 
+    try {
+        let maps;
+        // If q is null or empty, return all maps
+        if (!qExtract || qExtract.trim() === "") {
+            maps = await MapPage.find().populate('owner', 'userName');
+            console.log('No search query');
+        } else {
+            // Perform a case-insensitive search on the title, description, and author.userName fields
+            maps = await MapPage.find().populate('owner', 'userName').or([
+                { title: { $regex: new RegExp(qExtract, 'i') } },
+                { description: { $regex: new RegExp(qExtract, 'i') } },
+                { 'owner.userName': { $regex: new RegExp(qExtract, 'i') } },//doesn't work
+            ]);
+
+            console.log('Search query:', qExtract);
+        }
+        console.log('Maps found:', maps)
+
+        const transformedMaps = maps.map(map => ({
+            id: map._id,
+            title: map.title,
+            description: map.description,
+            author: map.owner.userName,
+            tags: map.tags,
+            mapSnapshot: temp_map, //need to include actual snapshot
+            createdDate: new Date(map.creationDate).toLocaleDateString(),
+            upVotes: map.upVotes,
+            downVotes: map.downVotes,
+            comments: map.comments.map(comment => ({ 
+                user: comment.user,
+                likes: comment.likes,
+                dislikes: comment.dislikes,
+                comment: comment.comment,
+                replies: comment.replies.map(reply => ({
+                    user: reply.user, 
+                    reply: reply.reply,
+                })),
+            })),
+            numberOfComments: map.numberOfComments,
+        }));
+        // console.log('Transformed maps:', transformedMaps);
+
+        res.json(transformedMaps);
+    } catch (error) {
+        console.error('Error fetching maps:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
 module.exports = {
     createMap,
     deleteMap,
@@ -309,5 +362,6 @@ module.exports = {
     getMapPagePairs,
     getMapPageById,
     getPublicMapPagePairs,
+    searchMapPages,
     // Add other map-related functions here
 };
