@@ -388,12 +388,12 @@ searchMapPages = async (req, res) => {
             console.log('No search query');
         } else {
             // Perform a case-insensitive search on the title, description, and author.userName fields
-            maps = await MapPage.find().populate('owner', 'userName').sort({ creationDate: -1 });
+            maps = await MapPage.find().populate('owner', 'userName');
             maps = maps.filter(map =>
                 map.title.toLowerCase().includes(qExtract.toLowerCase()) ||
                 map.description.toLowerCase().includes(qExtract.toLowerCase()) ||
                 (map.owner && map.owner.userName.toLowerCase().includes(qExtract.toLowerCase()))
-            );
+            ).sort((a, b) => b.creationDate - a.creationDate);;
 
             console.log('Search query:', qExtract);
         }
