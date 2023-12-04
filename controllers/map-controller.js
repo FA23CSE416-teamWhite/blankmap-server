@@ -81,16 +81,20 @@ createMap = async (req, res) => {
 };
 
 deleteMap = async (req, res) => {
-    if (auth.verifyUser(req) === null) {
-        return res.status(400).json({
-            errorMessage: 'UNAUTHORIZED'
-        });
-    }
-    console.log("delete Map with id: " + JSON.stringify(req.params.id));
-    console.log("delete " + req.params.id);
-    Map.findById({ _id: req.params.id }, (err, map) => {
+    try {
+        if (auth.verifyUser(req) === null) {
+            return res.status(400).json({
+                errorMessage: 'UNAUTHORIZED'
+            });
+        }
+
+        console.log("delete Map with id: " + JSON.stringify(req.params.id));
+
+        const map = await Map.findById(req.params.id).exec();
+
         console.log("map found: " + JSON.stringify(map));
-        if (err) {
+
+        if (!map) {
             return res.status(404).json({
                 errorMessage: 'Map not found!',
             });
@@ -98,30 +102,46 @@ deleteMap = async (req, res) => {
 
         // Check ownership or other conditions if necessary
 
-        Map.findOneAndDelete({ _id: req.params.id }, () => {
-            return res.status(200).json({});
-        }).catch(err => console.log(err));
-    });
+        await Map.findOneAndDelete({ _id: req.params.id }).exec();
+
+        return res.status(200).json({});
+    } catch (error) {
+        console.error("FAILURE: " + JSON.stringify(error));
+        return res.status(500).json({
+            errorMessage: 'Failed to delete Map!',
+        });
+    }
 };
 //gets all the mappages
 getMapPages = async (req, res) => {
-    if(auth.verifyUser(req) === null){
+    try {
+        if (auth.verifyUser(req) === null) {
+            return res.status(400).json({
+                errorMessage: 'UNAUTHORIZED'
+            });
+        }
+
+        const mappages = await MapPage.find({}).exec();
+
+        if (!mappages || mappages.length === 0) {
+            return res.status(404).json({
+                success: false,
+                error: 'Mappages not found'
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            data: mappages
+        });
+    } catch (error) {
+        console.error("FAILURE: " + JSON.stringify(error));
         return res.status(400).json({
-            errorMessage: 'UNAUTHORIZED'
-        })
+            success: false,
+            error: error.message
+        });
     }
-    await MapPage.find({}, (err, mappages) => {
-        if (err) {
-            return res.status(400).json({ success: false, error: err })
-        }
-        if (!mappages.length) {
-            return res
-                .status(404)
-                .json({ success: false, error: `Mappages not found` })
-        }
-        return res.status(200).json({ success: true, data: mappages })
-    }).catch(err => console.log(err))
-}
+};
 //gets the mappages of the user
 getMapPagePairs = async (req, res) => {
     try {
@@ -215,91 +235,155 @@ getPublicMapPagePairs = async (req, res) => {
 };
 //get map pages based on mappage id
 getMapPageById = async (req, res) => {
-    console.log(req.params)
-    console.log(req.body)
-    if(auth.verifyUser(req) === null){
-        console.log("verify user issue")
-        return res.status(400).json({
-            errorMessage: 'UNAUTHORIZED'
-        })
-    }
-    console.log("Find Mappage with id: " + JSON.stringify(req.params.id));
+    try {
+        console.log(req.params);
+        console.log(req.body);
 
-    await MapPage.findById({ _id: req.params.id }, (err, mappage) => {
-        if (err) {
-            console.log("find map by id issue")
-            return res.status(400).json({ success: false, error: err });
+        if (auth.verifyUser(req) === null) {
+            console.log("verify user issue");
+            return res.status(400).json({
+                errorMessage: 'UNAUTHORIZED'
+            });
         }
+
+        console.log("Find Mappage with id: " + JSON.stringify(req.params.id));
+
+        const mappage = await MapPage.findById(req.params.id).exec();
+        
+        if (!mappage) {
+            console.log("Mappage not found");
+            return res.status(404).json({ success: false, error: 'Mappage not found' });
+        }
+
         console.log("Found mappage: " + JSON.stringify(mappage));
 
-        // DOES THIS Mappage BELONG TO THIS USER?
-        async function asyncFindUser(mappage) {
-            await User.findOne({ userName: mappage.owner.userName }, (err, user) => {
-                return res.status(200).json({ success: true, mappage: mappage })
+        // Check if the Mappage belongs to this user
+        // const user = await User.findOne({ userName: mappage.owner.userName }).exec();
+        
+        // if (!user) {
+        //     console.log("User not found");
+        //     return res.status(404).json({ success: false, error: 'User not found' });
+        // }
+
+        return res.status(200).json({ success: true, mappage: mappage });
+    } catch (err) {
+        console.error(err);
+        return res.status(400).json({ success: false, error: err.message });
+    }
+};
+// if only changing comments and likes
+updateMapPageGeneral = async (req, res) => {
+    try {
+        if (auth.verifyUser(req) === null) {
+            return res.status(400).json({
+                errorMessage: 'UNAUTHORIZED'
             });
         }
-        asyncFindUser(mappage);
-    }).catch(err => console.log(err))
-}
-updateMapPage = async (req, res) => {
-    if (auth.verifyUser(req) === null) {
-        return res.status(400).json({
-            errorMessage: 'UNAUTHORIZED'
+
+        const body = req.body;
+        console.log("updateMappage: " + JSON.stringify(body));
+        console.log("req.body.name: " + req.body.title);
+
+        if (!body) {
+            return res.status(400).json({
+                success: false,
+                error: 'You must provide a body to update',
+            });
+        }
+
+        const mappage = await MapPage.findById(req.params.id).exec();
+
+        if (!mappage) {
+            return res.status(404).json({
+                message: 'MapPage not found!',
+            });
+        }
+
+        mappage.comments = body.comments;
+        mappage.upvotes = body.upvotes;
+        mappage.downvotes = body.downvotes;
+
+        const updatedMappage = await mappage.save();
+
+        console.log("SUCCESS!!!");
+        return res.status(200).json({
+            success: true,
+            id: updatedMappage._id,
+            message: 'MapPage updated!',
+        });
+    } catch (error) {
+        console.log("FAILURE: " + JSON.stringify(error));
+        return res.status(404).json({
+            error,
+            message: 'MapPage not updated!',
         });
     }
-    const body = req.body
-    console.log("updateMappage: " + JSON.stringify(body));
-    console.log("req.body.name: " + req.body.title);
-
-    if (!body) {
-        return res.status(400).json({
-            success: false,
-            error: 'You must provide a body to update',
-        })
-    }
-    MapPage.findById({ _id: req.params.id }, (err, mappage) => {
-        console.log("mappage found: " + JSON.stringify(mappage));
-        if (err) {
-            return res.status(404).json({
-                err,
-                message: 'MapPage not found!',
-            })
-        }
-        // DOES THIS MAP BELONG TO THIS USER?
-        async function asyncFindUser(mappage) {
-            await User.findOne({ userName: mappage.owner.userName }, (err, user) => {
-                    console.log("correct user!");
-
-                    mappage.comments = body.mappage.comments;
-                    mappage.description = body.mappage.description;
-                    mappage.lastModified = body.mappage.lastModified;
-                    mappage.map = body.mappage.map;
-                    mappage.publicStatus = body.mappage.publicStatus;
-                    mappage.tags = body.mappage.tags;
-                    mappage.title = body.mappage.title;
-                    mappage.upvotes = body.mappage.upvotes;
-                    mappage.downvotes = body.mappage.downvotes;
-                    mappage
-                        .save()
-                        .then(() => {
-                            console.log("SUCCESS!!!");
-                            return res.status(200).json({
-                                success: true,
-                                id: mappage._id,
-                                message: 'mappage updated!',
-                            })
-                        })
-                        .catch(error => {
-                            console.log("FAILURE: " + JSON.stringify(error));
-                            return res.status(404).json({
-                                error,
-                                message: 'mappage not updated!',
-                            })
-                        })
+};
+updateMapPage = async (req, res) => {
+    try {
+        if (auth.verifyUser(req) === null) {
+            return res.status(400).json({
+                errorMessage: 'UNAUTHORIZED'
             });
         }
-        asyncFindUser(mappage);
-    })
+
+        const body = req.body;
+        console.log("updateMappage: " + JSON.stringify(body));
+        console.log("req.body.name: " + req.body.title);
+
+        if (!body) {
+            return res.status(400).json({
+                success: false,
+                error: 'You must provide a body to update',
+            });
+        }
+
+        const mappage = await MapPage.findById(req.params.id).exec();
+
+        console.log("mappage found: " + JSON.stringify(mappage));
+
+        if (!mappage) {
+            return res.status(404).json({
+                message: 'MapPage not found!',
+            });
+        }
+
+        // Check if the MapPage belongs to this user
+        const user = await User.findOne({ userName: mappage.owner.userName }).exec();
+
+        if (!user) {
+            console.log("User not authorized");
+            return res.status(401).json({
+                message: 'User not authorized to update this MapPage',
+            });
+        }
+
+        // Update MapPage properties
+        mappage.comments = body.comments;
+        mappage.description = body.description;
+        mappage.lastModified = body.lastModified;
+        mappage.map = body.map;
+        mappage.publicStatus = body.publicStatus;
+        mappage.tags = body.tags;
+        mappage.title = body.title;
+        mappage.upvotes = body.upvotes;
+        mappage.downvotes = body.downvotes;
+
+        const updatedMappage = await mappage.save();
+
+        console.log("SUCCESS!!!");
+        return res.status(200).json({
+            success: true,
+            id: updatedMappage._id,
+            message: 'MapPage updated!',
+        });
+    } catch (error) {
+        console.error("FAILURE: " + JSON.stringify(error));
+        return res.status(404).json({
+            error,
+            message: 'MapPage not updated!',
+        });
+    }
 };
 // Similar functions for other map-related endpoints
 searchMapPages = async (req, res) => {
@@ -359,6 +443,7 @@ module.exports = {
     createMap,
     deleteMap,
     updateMapPage,
+    updateMapPageGeneral,
     getMapPages,
     getMapPagePairs,
     getMapPageById,
