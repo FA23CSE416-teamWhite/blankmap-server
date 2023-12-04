@@ -124,55 +124,54 @@ getMapPages = async (req, res) => {
 }
 //gets the mappages of the user
 getMapPagePairs = async (req, res) => {
-    if(auth.verifyUser(req) === null){
-        return res.status(400).json({
-            errorMessage: 'UNAUTHORIZED'
-        })
-    }
-    await User.findOne({ _id: req.userId }, (err, user) => {
-        console.log("find user with id " + req.userId);
-        async function asyncFindMapPages(user) {
-            console.log("find all Mappages owned by " + user.userName);
-            await MapPage.find({ owner: user }, (err, mappages) => {
-                console.log("found Mappages: " + JSON.stringify(mappages));
-                if (err) {
-                    return res.status(400).json({ success: false, error: err })
-                }
-                if (!mappages) {
-                    console.log("!mappages.length");
-                    return res
-                        .status(404)
-                        .json({ success: false, error: 'Mappages not found' })
-                }
-                else {
-                    console.log("Send the Mappages pairs");
-                    // PUT ALL THE LISTS INTO ID, NAME PAIRS
-                    let pairs = [];
-                    for (let key in mappages) {
-                        let pages = mappages[key];
-                        let pair = {
-                            _id: pages._id,
-                            title: pages.title,
-                            downvotes: pages.downvotes,
-                            upvotes: pages.upvotes,
-                            tags: pages.tags,
-                            publicStatus: pages.publicStatus,
-                            comments: pages.comments,
-                            owner: pages.owner,
-                            map: pages.map,
-                            lastModified: pages.lastModified,
-                            description: pages.description,
-                            creationDate: pages.creationDate,
-                        };
-                        pairs.push(pair);
-                    }
-                    return res.status(200).json({ success: true, idNamePairs: pairs })
-                }
-            }).catch(err => console.log(err))
+    try {
+        const verifiedUser = auth.verifyUser(req);
+        if (verifiedUser === null) {
+            return res.status(400).json({
+                errorMessage: 'UNAUTHORIZED'
+            });
         }
-        asyncFindMapPages(user);
-    }).catch(err => console.log(err))
-}
+
+        const user = await User.findOne({ _id: req.userId });
+        console.log("find user with id " + req.userId);
+
+        if (!user) {
+            return res.status(404).json({ success: false, error: 'User not found' });
+        }
+
+        console.log("find all Mappages owned by " + user.userName);
+        const mappages = await MapPage.find({ owner: user });
+
+        console.log("found Mappages: " + JSON.stringify(mappages));
+
+        if (!mappages || mappages.length === 0) {
+            console.log("!mappages.length");
+            return res.status(404).json({ success: false, error: 'Mappages not found' });
+        }
+
+        const idNamePairs = mappages.map(page => ({
+            _id: page._id,
+            title: page.title,
+            downvotes: page.downvotes,
+            upvotes: page.upvotes,
+            tags: page.tags,
+            publicStatus: page.publicStatus,
+            comments: page.comments,
+            owner: page.owner,
+            map: page.map,
+            lastModified: page.lastModified,
+            description: page.description,
+            creationDate: page.creationDate,
+        }));
+
+        console.log("Send the Mappages pairs");
+        return res.status(200).json({ success: true, idNamePairs });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ success: false, error: 'Internal Server Error' });
+    }
+};
+
 //get all public maps only
 getPublicMapPagePairs = async (req, res) => {
     try {
