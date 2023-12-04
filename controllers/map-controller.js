@@ -25,6 +25,7 @@ createMap = async (req, res) => {
                 error: 'Invalid input. Please provide all required fields.',
             });
         }
+        console.log(file)
         const bufferData = Buffer.from(JSON.stringify(file));
         console.log("BUFFER DATA: " + bufferData)
         console.log("passed valid input");
@@ -166,7 +167,7 @@ getMapPagePairs = async (req, res) => {
 
                 // Parse string to JSON object
                 jsonData = JSON.parse(bufferString);}
-            
+                console.log(jsonData)
             return {
                 id: page._id,
                 title: page.title,
