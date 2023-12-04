@@ -159,7 +159,10 @@ getMapPagePairs = async (req, res) => {
         
         const idNamePairs = await Promise.all(mappages.map(async page => {
             const mapData = await Map.findById(page.map); // Fetch map data using the ID stored in MapPage
+            const bufferString = mapData.baseData.toString('utf8');
 
+            // Parse string to JSON object
+            const jsonData = JSON.parse(bufferString);
             return {
                 _id: page._id,
                 title: page.title,
@@ -170,7 +173,7 @@ getMapPagePairs = async (req, res) => {
                 comments: page.comments,
                 owner: user.userName,
                 mapSnapshot: temp_map,
-                map: mapData, 
+                map: jsonData,
                 lastModified: page.lastModified.toLocaleDateString(),
                 description: page.description,
                 creationDate: page.creationDate.toLocaleDateString(),
