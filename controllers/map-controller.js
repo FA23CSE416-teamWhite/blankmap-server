@@ -157,11 +157,11 @@ getMapPagePairs = async (req, res) => {
             tags: page.tags,
             publicStatus: page.publicStatus,
             comments: page.comments,
-            owner: page.owner,
+            owner: user.userName,
             map: page.map,
-            lastModified: page.lastModified,
+            lastModified: page.lastModified.toLocaleDateString(),
             description: page.description,
-            creationDate: page.creationDate,
+            creationDate: page.creationDate.toLocaleDateString(),
         }));
 
         console.log("Send the Mappages pairs");
