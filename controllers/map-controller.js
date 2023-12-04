@@ -384,11 +384,11 @@ searchMapPages = async (req, res) => {
         let maps;
         // If q is null or empty, return all maps
         if (!qExtract || qExtract.trim() === "") {
-            maps = await MapPage.find().populate('owner', 'userName');
+            maps = await MapPage.find().populate('owner', 'userName').sort({ creationDate: -1 });
             console.log('No search query');
         } else {
             // Perform a case-insensitive search on the title, description, and author.userName fields
-            maps = await MapPage.find().populate('owner', 'userName');
+            maps = await MapPage.find().populate('owner', 'userName').sort({ creationDate: -1 });
             maps = maps.filter(map =>
                 map.title.toLowerCase().includes(qExtract.toLowerCase()) ||
                 map.description.toLowerCase().includes(qExtract.toLowerCase()) ||
@@ -398,11 +398,6 @@ searchMapPages = async (req, res) => {
             console.log('Search query:', qExtract);
         }
         console.log('Maps found:', maps)
-        maps = maps.sort((a, b) => {
-            const dateA = new Date(a.creationDate);
-            const dateB = new Date(b.creationDate);
-            return dateB - dateA;
-        });
 
         const transformedMaps = maps.map(map => ({
             id: map._id,
