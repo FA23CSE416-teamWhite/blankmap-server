@@ -27,12 +27,10 @@ createMap = async (req, res) => {
             });
         }
         console.log(file)
-        const bufferData = Buffer.from(JSON.stringify(file));
-        console.log("BUFFER DATA: " + bufferData)
-        console.log("passed valid input");
+        const fileContent = JSON.parse(file);
         const mapData = new Map({
             addedFeatures: [{ }],
-            baseData: bufferData ,
+            baseData: fileContent,
             mapType: selectedCategory 
         });
         const savedMapData = await mapData.save();
