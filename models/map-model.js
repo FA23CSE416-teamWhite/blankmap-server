@@ -6,7 +6,7 @@ const mapSchema = new Schema({
         required: true,
     },
     baseData: {
-        type: Buffer, // no set type yet
+        type: String, 
         required: true,
     },
     mapType: {
