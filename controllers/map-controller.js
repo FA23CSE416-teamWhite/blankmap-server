@@ -439,6 +439,27 @@ searchMapPages = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 }
+
+updateMapBaseData = async (req, res) => {
+    try {
+        if (auth.verifyUser(req) === null) {
+            return res.status(400).json({
+                errorMessage: 'UNAUTHORIZED'
+            });
+        }
+        const { id } = req.params;
+        const baseData = req.body.stringGeo;
+        const mapPageToBeUpdated = await MapPage.findById(id);
+        const mapToBeUpdated = await Map.findById(mapPageToBeUpdated.map);
+        mapToBeUpdated.baseData = baseData;
+        await mapToBeUpdated.save();
+        res.json(mapPageToBeUpdated.populate('map'));
+        if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No map with id: ${id}`);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
 module.exports = {
     createMap,
     deleteMap,
@@ -449,5 +470,6 @@ module.exports = {
     getMapPageById,
     getPublicMapPagePairs,
     searchMapPages,
+    updateMapBaseData
     // Add other map-related functions here
 };
