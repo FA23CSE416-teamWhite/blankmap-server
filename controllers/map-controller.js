@@ -62,7 +62,7 @@ createMap = async (req, res) => {
 
         return res.status(201).json({ map: map });
     } catch (error) {
-        // console.log("error: " + error);
+        console.log("error: " + error);
         return res.status(500).json({ errorMessage: 'Internal Server Error' });
     }
 };

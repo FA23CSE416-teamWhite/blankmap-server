@@ -14,7 +14,7 @@ getLoggedIn = async (req, res) => {
         }
 
         const loggedInUser = await User.findOne({ _id: userId });
-        console.log("loggedInUser: " + loggedInUser);
+        console.log("loggedInUser: " + loggedInUser.userName);
 
         return res.status(200).json({
             loggedIn: true,
