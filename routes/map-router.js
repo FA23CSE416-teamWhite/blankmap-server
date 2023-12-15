@@ -587,4 +587,5 @@ router.get('/mappagepairs', auth.verify, MapController.getMapPagePairs);
 router.get('/mappages', auth.verify, MapController.getMapPages)
 router.get('/mappage/:id', auth.verify, MapController.getMapPageById)
 router.get('/publicMapPagePairs', auth.verify, MapController.getPublicMapPagePairs);
+router.get('/map/:id', auth.verify, MapController.getMapPageById);
 module.exports = router;
