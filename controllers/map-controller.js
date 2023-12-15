@@ -11,7 +11,7 @@ createMap = async (req, res) => {
     try {
         const { title, description, publicStatus, selectedCategory, tags, file } = req.body;
         const user_id = auth.verifyUser(req);
-        console.log("user_id_createmap: " + user_id);
+        // console.log("user_id_createmap: " + user_id);
         if (user_id === null) {
             return res.status(400).json({
                 errorMessage: 'UNAUTHORIZED'
@@ -26,6 +26,7 @@ createMap = async (req, res) => {
             });
         }
         const fileContent = JSON.parse(file);
+        // console.log("fileContent: " + fileContent);
         const mapData = new Map({
             addedFeatures: [{ }],
             baseData: fileContent,
@@ -51,7 +52,7 @@ createMap = async (req, res) => {
             return res.status(404).json({ errorMessage: 'User not found' });
         }
 
-        console.log("user found: " + JSON.stringify(user));
+        // console.log("user found: " + JSON.stringify(user));
 
         map.owner = user;
 
@@ -61,7 +62,7 @@ createMap = async (req, res) => {
 
         return res.status(201).json({ map: map });
     } catch (error) {
-        console.log("error: " + error);
+        // console.log("error: " + error);
         return res.status(500).json({ errorMessage: 'Internal Server Error' });
     }
 };
@@ -74,11 +75,11 @@ deleteMap = async (req, res) => {
             });
         }
 
-        console.log("delete Map with id: " + JSON.stringify(req.params.id));
+        // console.log("delete Map with id: " + JSON.stringify(req.params.id));
 
         const map = await Map.findById(req.params.id).exec();
 
-        console.log("map found: " + JSON.stringify(map));
+        // console.log("map found: " + JSON.stringify(map));
 
         if (!map) {
             return res.status(404).json({
@@ -139,19 +140,19 @@ getMapPagePairs = async (req, res) => {
         }
 
         const user = await User.findOne({ _id: req.userId });
-        console.log("find user with id " + req.userId);
+        // console.log("find user with id " + req.userId);
 
         if (!user) {
             return res.status(404).json({ success: false, error: 'User not found' });
         }
 
-        console.log("find all Mappages owned by " + user.userName);
+        // console.log("find all Mappages owned by " + user.userName);
         const mappages = await MapPage.find({ owner: user }).sort({ creationDate: -1 });
 
-        console.log("found Mappages: " + JSON.stringify(mappages));
+        // console.log("found Mappages: " + JSON.stringify(mappages));
 
         if (!mappages || mappages.length === 0) {
-            console.log("!mappages.length");
+            // console.log("!mappages.length");
             return res.status(200).json({ success: false, mappages});
         }
         
@@ -164,7 +165,7 @@ getMapPagePairs = async (req, res) => {
 
                 // Parse string to JSON object
                 jsonData = JSON.parse(bufferString);}
-                console.log(jsonData)
+                // console.log(jsonData)
             return {
                 id: page._id,
                 title: page.title,
@@ -182,7 +183,7 @@ getMapPagePairs = async (req, res) => {
             };
         }));
 
-        console.log("Send the Mappages pairs");
+        // console.log("Send the Mappages pairs");
         return res.status(200).json({ success: true, idNamePairs });
     } catch (error) {
         console.error(error);
@@ -201,13 +202,13 @@ getPublicMapPagePairs = async (req, res) => {
 
         const mappages = await MapPage.find({ publicStatus: true }).exec();
 
-        console.log("found Mappages: " + JSON.stringify(mappages));
+        // console.log("found Mappages: " + JSON.stringify(mappages));
 
         if (!mappages || mappages.length === 0) {
-            console.log("!mappages.length");
+            // console.log("!mappages.length");
             return res.status(404).json({ success: false, error: 'Mappages not found' });
         } else {
-            console.log("Send the Mappages pairs");
+            // console.log("Send the Mappages pairs");
             // PUT ALL THE LISTS INTO ID, NAME PAIRS
             let pairs = mappages.map(pages => ({
                 _id: pages._id,
@@ -234,26 +235,26 @@ getPublicMapPagePairs = async (req, res) => {
 //get map pages based on mappage id
 getMapPageById = async (req, res) => {
     try {
-        console.log(req.params);
-        console.log(req.body);
+        // console.log(req.params);
+        // console.log(req.body);
 
         if (auth.verifyUser(req) === null) {
-            console.log("verify user issue");
+            // console.log("verify user issue");
             return res.status(400).json({
                 errorMessage: 'UNAUTHORIZED'
             });
         }
 
-        console.log("Find Mappage with id: " + JSON.stringify(req.params.id));
+        // console.log("Find Mappage with id: " + JSON.stringify(req.params.id));
 
-        const mappage = await MapPage.findById(req.params.id).exec();
-        
+        const mappage = await MapPage.findById(req.params.id).populate('map').exec();
+        // console.log("mappage: " + JSON.stringify(mappage));
         if (!mappage) {
-            console.log("Mappage not found");
+            // console.log("Mappage not found");
             return res.status(404).json({ success: false, error: 'Mappage not found' });
         }
 
-        console.log("Found mappage: " + JSON.stringify(mappage));
+        // console.log("Found mappage: " + JSON.stringify(mappage));
 
         // Check if the Mappage belongs to this user
         // const user = await User.findOne({ userName: mappage.owner.userName }).exec();
@@ -279,8 +280,8 @@ updateMapPageGeneral = async (req, res) => {
         }
 
         const body = req.body;
-        console.log("updateMappage: " + JSON.stringify(body));
-        console.log("req.body.name: " + req.body.title);
+        // console.log("updateMappage: " + JSON.stringify(body));
+        // console.log("req.body.name: " + req.body.title);
 
         if (!body) {
             return res.status(400).json({
@@ -303,7 +304,7 @@ updateMapPageGeneral = async (req, res) => {
 
         const updatedMappage = await mappage.save();
 
-        console.log("SUCCESS!!!");
+        // console.log("SUCCESS!!!");
         return res.status(200).json({
             success: true,
             id: updatedMappage._id,
@@ -394,7 +395,7 @@ searchMapPages = async (req, res) => {
         // If q is null or empty, return all maps
         if (!qExtract || qExtract.trim() === "") {
             maps = await MapPage.find().populate('owner', 'userName').sort({ creationDate: -1 });
-            console.log('No search query');
+            // console.log('No search query');
         } else {
             // Perform a case-insensitive search on the title, description, and author.userName fields
             maps = await MapPage.find().populate('owner', 'userName');
@@ -404,9 +405,9 @@ searchMapPages = async (req, res) => {
                 (map.owner && map.owner.userName.toLowerCase().includes(qExtract.toLowerCase()))
             ).sort((a, b) => b.creationDate - a.creationDate);;
 
-            console.log('Search query:', qExtract);
+            // console.log('Search query:', qExtract);
         }
-        console.log('Maps found:', maps)
+        // console.log('Maps found:', maps)
 
         const transformedMaps = maps.map(map => ({
             id: map._id,
