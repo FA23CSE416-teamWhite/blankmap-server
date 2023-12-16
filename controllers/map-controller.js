@@ -28,7 +28,7 @@ createMap = async (req, res) => {
         const fileContent = JSON.parse(file);
         // console.log("fileContent: " + fileContent);
         const mapData = new Map({
-            addedFeatures: [{ }],
+            addedFeatures: [],
             baseData: fileContent,
             mapType: selectedCategory 
         });
@@ -448,13 +448,18 @@ updateMapBaseData = async (req, res) => {
             });
         }
         const { id } = req.params;
+        if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No map with id: ${id}`);
         const baseData = req.body.stringGeo;
+        const addedFeatures = req.body.addedFeatures;
+        // console.log("addedFeatures: " + addedFeatures);
+        // console.log("test:"+addedFeatures.color)
         const mapPageToBeUpdated = await MapPage.findById(id);
         const mapToBeUpdated = await Map.findById(mapPageToBeUpdated.map);
         mapToBeUpdated.baseData = baseData;
+        mapToBeUpdated.addedFeatures = [addedFeatures];
         await mapToBeUpdated.save();
-        res.json(mapPageToBeUpdated.populate('map'));
-        if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No map with id: ${id}`);
+        await mapPageToBeUpdated.populate('map');
+        res.json(mapPageToBeUpdated);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
