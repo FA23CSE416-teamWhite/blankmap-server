@@ -19,39 +19,6 @@ getLoggedIn = async (req, res) => {
         return res.status(200).json({
             loggedIn: true,
             user: {
-                firstName: loggedInUser.firstName,
-                lastName: loggedInUser.lastName,
-                email: loggedInUser.email,
-                userName: loggedInUser.userName,
-                dateJoined: loggedInUser.dateJoined,
-                phone: loggedInUser.phone,
-                bio: loggedInUser.bio,
-                maps: loggedInUser.maps,
-                comments: loggedInUser.comments
-            }
-        })
-    } catch (err) {
-        console.log("err: " + err);
-        res.json(false);
-    }
-}
-getUserId = async (req, res) => {
-    try {
-        let userId = auth.verifyUser(req);
-        if (!userId) {
-            return res.status(200).json({
-                loggedIn: false,
-                user: null,
-                errorMessage: "?"
-            })
-        }
-
-        const loggedInUser = await User.findOne({ _id: userId });
-        console.log("loggedInUser: " + loggedInUser.userName);
-
-        return res.status(200).json({
-            loggedIn: true,
-            user: {
                 id: userId,
                 firstName: loggedInUser.firstName,
                 lastName: loggedInUser.lastName,
@@ -69,6 +36,7 @@ getUserId = async (req, res) => {
         res.json(false);
     }
 }
+
 getQuestion = async (req, res) => {
     try {
         console.log(req.params)
@@ -138,6 +106,7 @@ loginUser = async (req, res) => {
         }).status(200).json({
             success: true,
             user: {
+                id: existingUser._id,
                 firstName: existingUser.firstName,
                 lastName: existingUser.lastName,  
                 email: existingUser.email,
@@ -223,6 +192,7 @@ registerUser = async (req, res) => {
         }).status(200).json({
             success: true,
             user: {
+                id: savedUser._id,
                 firstName: savedUser.firstName,
                 lastName: savedUser.lastName,  
                 email: savedUser.email,
@@ -290,5 +260,4 @@ module.exports = {
     loginUser,
     logoutUser,
     updateUser,
-    getUserId,
 }
