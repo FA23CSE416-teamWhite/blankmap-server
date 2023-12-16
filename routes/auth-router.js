@@ -10,5 +10,6 @@ router.get('/logout', AuthController.logoutUser)
 router.get('/loggedIn', AuthController.getLoggedIn)
 router.get('/question/:email', AuthController.getQuestion)
 router.get('/update', AuthController.updateUser)
+router.get('/getId', AuthController.getUserId)
 
 module.exports = router
