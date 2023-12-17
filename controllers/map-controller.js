@@ -364,17 +364,16 @@ updateMapPage = async (req, res) => {
         }
 
         // Update MapPage properties
-        const updatedMap = await body.map.save()
-        
         mappage.comments = body.comments;
         mappage.description = body.description;
         mappage.lastModified = body.lastModified;
-        mappage.map = updatedMap;
+        mappage.map = body.map;
         mappage.publicStatus = body.publicStatus;
         mappage.tags = body.tags;
         mappage.title = body.title;
         mappage.upvotes = body.upvotes;
         mappage.downvotes = body.downvotes;
+        
         const updatedMappage = await mappage.save();
 
         console.log("SUCCESS!!!");
