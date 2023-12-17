@@ -20,7 +20,7 @@ createMap = async (req, res) => {
                 errorMessage: 'UNAUTHORIZED'
             });
         }
-
+        console.log("Check missing fields")
         // Check for missing fields
         if (!title || !description || !publicStatus || !tags || !selectedCategory || !file) {
             return res.status(400).json({
@@ -28,13 +28,15 @@ createMap = async (req, res) => {
                 error: 'Invalid input. Please provide all required fields.',
             });
         }
+        console.log("Parsing File Content")
         const fileContent = JSON.parse(file);
-        // console.log("fileContent: " + fileContent);
+        console.log("fileContent: " + fileContent);
         const mapData = new Map({
             addedFeatures: [],
             baseData: fileContent,
             mapType: selectedCategory 
         });
+        console.log("Saving Map")
         const savedMapData = await mapData.save();
         const map = new MapPage({
             title: title,
@@ -48,7 +50,7 @@ createMap = async (req, res) => {
         if (!map) {
             return res.status(400).json({ success: false, error: 'Failed to create map' });
         }
-
+        console.log("Find user by id")
         const user = await User.findOne({ _id: user_id });
 
         if (!user) {
@@ -58,11 +60,11 @@ createMap = async (req, res) => {
         // console.log("user found: " + JSON.stringify(user));
 
         map.owner = user;
-
+        console.log("Adding to user maps")
         user.maps.push(map._id);
-
+        console.log("Saving the user")
         await Promise.all([map.save(), user.save()]);
-
+        console.log("Return the status")
         return res.status(201).json({ map: map });
     } catch (error) {
         console.log("error: " + error);
