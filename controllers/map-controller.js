@@ -11,7 +11,7 @@ createMap = async (req, res) => {
     try {
         const { title, description, publicStatus, selectedCategory, tags, file } = req.body;
         console.log("inside createMap")
-        console.log("request: " + JSON.stringify(req))
+        console.log("request: " + req)
         const user_id = auth.verifyUser(req);
         console.log("user_id: " + user_id)
         // console.log("user_id_createmap: " + user_id);
