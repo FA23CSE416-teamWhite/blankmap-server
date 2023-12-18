@@ -82,21 +82,18 @@ deleteMap = async (req, res) => {
         }
 
         // console.log("delete Map with id: " + JSON.stringify(req.params.id));
-
-        const map = await Map.findById(req.params.id).exec();
-
+        const mappage = await MapPage.findById(req.params.id).exec();
         // console.log("map found: " + JSON.stringify(map));
 
-        if (!map) {
+        if (!mappage) {
             return res.status(404).json({
                 errorMessage: 'Map not found!',
             });
         }
-
+        console.log("Mappage to be deleted:", mappage)
         // Check ownership or other conditions if necessary
-
-        await Map.findOneAndDelete({ _id: req.params.id }).exec();
-
+        await MapPage.findOneAndDelete({ _id: req.params.id }).exec();
+        await Map.findOneAndDelete({ _id: mappage.map._id }).exec();
         return res.status(200).json({});
     } catch (error) {
         console.error("FAILURE: " + JSON.stringify(error));
