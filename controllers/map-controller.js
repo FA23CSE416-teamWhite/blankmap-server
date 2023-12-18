@@ -459,7 +459,12 @@ updateMapBaseData = async (req, res) => {
         const mapPageToBeUpdated = await MapPage.findById(id);
         const mapToBeUpdated = await Map.findById(mapPageToBeUpdated.map);
         mapToBeUpdated.baseData = baseData;
-        mapToBeUpdated.addedFeatures = [addedFeatures];
+        if (addedFeatures == []){
+            mapToBeUpdated.addedFeatures = addedFeatures
+        }
+        else{
+            mapToBeUpdated.addedFeatures = [addedFeatures];
+        }
         await mapToBeUpdated.save();
         await mapPageToBeUpdated.populate('map');
         res.json(mapPageToBeUpdated);
