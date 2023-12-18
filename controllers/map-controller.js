@@ -181,7 +181,7 @@ getMapPagePairs = async (req, res) => {
                 publicStatus: page.publicStatus,
                 comments: page.comments,
                 owner: user.userName,
-                mapSnapshot: temp_map,
+                mapSnapshot: page.imageURL,
                 map: jsonData,
                 lastModified: page.lastModified.toLocaleDateString(),
                 description: page.description,
