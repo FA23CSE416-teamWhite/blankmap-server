@@ -421,7 +421,7 @@ searchMapPages = async (req, res) => {
             description: map.description,
             owner: map.owner.userName,
             tags: map.tags,
-            mapSnapshot: temp_map, //need to include actual snapshot
+            mapSnapshot: map.imageURL, //need to include actual snapshot
             creationDate: new Date(map.creationDate).toLocaleDateString(),
             upvotes: map.upvotes,
             downvotes: map.downvotes,
