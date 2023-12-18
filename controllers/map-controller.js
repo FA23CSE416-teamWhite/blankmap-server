@@ -9,8 +9,8 @@ const temp_map = 'https://datavizcatalogue.com/methods/images/top_images/choropl
 
 createMap = async (req, res) => {
     try {
-        const { title, description, publicStatus, selectedCategory, tags, file } = req.body;
-        console.log("inside createMap")
+        const { title, description, publicStatus, selectedCategory, tags, file,imageURL } = req.body;
+        console.log("inside createMap"),
         console.log("request: " + req)
         const user_id = auth.verifyUser(req);
         console.log("user_id: " + user_id)
@@ -43,6 +43,7 @@ createMap = async (req, res) => {
             description: description,
             publicStatus: publicStatus,
             tags: tags, 
+            imageURL:imageURL,
             map: savedMapData, 
             lastModified: Date.now(),
         });

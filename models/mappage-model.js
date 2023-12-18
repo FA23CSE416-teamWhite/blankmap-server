@@ -56,7 +56,10 @@ const MapPageSchema = new mongoose.Schema({
     ref: 'User',
     required: [true, 'Owner is required'],
   }, // User that created this map
-
+  imageURL: {
+    type: String,
+    required: false, // Modify as needed based on whether it's mandatory
+  },
   publicStatus: {
     type: Boolean,
     default: false,
