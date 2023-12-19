@@ -458,7 +458,9 @@ updateMapBaseData = async (req, res) => {
         // console.log("addedFeatures: " + addedFeatures);
         // console.log("test:"+addedFeatures.color)
         const mapPageToBeUpdated = await MapPage.findById(id);
+        console.log(mapPageToBeUpdated.imageURL)
         mapPageToBeUpdated.imageURL=imageURL;
+        console.log(mapPageToBeUpdated.imageURL)
         const mapToBeUpdated = await Map.findById(mapPageToBeUpdated.map);
         mapToBeUpdated.baseData = baseData;
         if (addedFeatures.length === 0){
