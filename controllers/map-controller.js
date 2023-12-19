@@ -454,9 +454,11 @@ updateMapBaseData = async (req, res) => {
         if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No map with id: ${id}`);
         const baseData = req.body.stringGeo;
         const addedFeatures = req.body.addedFeatures;
+        const imageURL=req.body.savedImage;
         // console.log("addedFeatures: " + addedFeatures);
         // console.log("test:"+addedFeatures.color)
         const mapPageToBeUpdated = await MapPage.findById(id);
+        mapPageToBeUpdated.imageURL=imageURL;
         const mapToBeUpdated = await Map.findById(mapPageToBeUpdated.map);
         mapToBeUpdated.baseData = baseData;
         if (addedFeatures.length === 0){
