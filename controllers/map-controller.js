@@ -398,7 +398,7 @@ searchMapPages = async (req, res) => {
         // If q is null or empty, return all maps
         if (!qExtract || qExtract.trim() === "") {
             maps = await MapPage.find().populate('owner', 'userName').sort({ creationDate: -1 });
-            let publicMaps = maps.filter(map => map.isPublic)
+            let publicMaps = maps.filter(map => map.publicStatus)
             console.log(maps)
             console.log(publicMaps)
             // console.log('No search query');
