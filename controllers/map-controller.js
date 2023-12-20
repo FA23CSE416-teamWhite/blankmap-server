@@ -254,17 +254,13 @@ getMapPageById = async (req, res) => {
 
         // console.log("Find Mappage with id: " + JSON.stringify(req.params.id));
 
-        let mappage = await MapPage.findById(req.params.id).populate('map').exec();
-        
+        const mappage = await MapPage.findById(req.params.id).populate('map').exec();
         // console.log("mappage: " + JSON.stringify(mappage));
         if (!mappage) {
             // console.log("Mappage not found");
             return res.status(404).json({ success: false, error: 'Mappage not found' });
         }
-        
-        const buffer = Buffer.from(mappage.map.baseData, 'base64'); // Convert back to Buffer
-        const decodedData = geobuf.decode(new Pbf(buffer)); // Decode the Geobuf data
-        mappage.map.baseData=decodedData;
+
         // console.log("Found mappage: " + JSON.stringify(mappage));
 
         // Check if the Mappage belongs to this user
