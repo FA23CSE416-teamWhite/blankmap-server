@@ -30,14 +30,13 @@ createMap = async (req, res) => {
                 error: 'Invalid input. Please provide all required fields.',
             });
         }
-        // console.log("Parsing File Content")
-        // const fileContent = JSON.parse(file);
-        // console.log("fileContent: " + fileContent);
-        const encodedData = geobuf.encode(file, new Pbf());
-        const compressed= Buffer.from(encodedData).toString('base64')
+        console.log("Parsing File Content")
+        const fileContent = JSON.parse(file);
+        console.log("fileContent: " + fileContent);
+        const encodedData = geobuf.encode(fileContent, new Pbf());
         const mapData = new Map({
             addedFeatures: [],
-            baseData: compressed,
+            baseData: encodedData,
             mapType: selectedCategory 
         });
         console.log("Saving Map")
