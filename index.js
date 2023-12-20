@@ -9,7 +9,7 @@ const app = express();
 
 require('./db/database');
 app.use(express.json({ limit: '16mb' })); 
-// app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '50mb'}));
 app.use(cors({
   origin: ['http://localhost:3000', 'https://blank-map-client.web.app','https://blankmap-front-1626f242c2d7.herokuapp.com'],
   // methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', 
