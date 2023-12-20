@@ -167,9 +167,7 @@ getMapPagePairs = async (req, res) => {
             const mapData = await Map.findById(page.map); // Fetch map data using the ID stored in MapPage
             let jsonData=null;
             if (mapData) {
-                // Assuming mapData.baseData contains the Geobuf data
-                const bufferString = mapData.baseData.toString('base64'); // Convert to base64 string
-                const buffer = Buffer.from(bufferString, 'base64'); // Convert back to Buffer
+                const buffer = Buffer.from(mapData.baseData, 'base64'); // Convert back to Buffer
                 const decodedData = geobuf.decode(new Pbf(buffer)); // Decode the Geobuf data
                 
                 // Use decodedData as your GeoJSON
@@ -367,12 +365,9 @@ updateMapPage = async (req, res) => {
             });
         }
         if (body.map) {
-            const bufferString = body.map.toString('base64'); // Assuming it's encoded as base64
-            const buffer = Buffer.from(bufferString, 'base64');
-            const decodedData = geobuf.decode(new Pbf(buffer));
-            // Now `decodedData` contains the GeoJSON representation of the map
-            // You can proceed to use this data as needed
-            mappage.map = decodedData;
+            const encodedData = geobuf.encode(body.map, new Pbf());
+            const compressed= Buffer.from(encodedData).toString('base64')
+            mappage.map = compressed;
         }
 
 
@@ -468,11 +463,8 @@ updateMapBaseData = async (req, res) => {
         const { id } = req.params;
         if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No map with id: ${id}`);
 
-        // Assuming req.body.stringGeo contains GeoJSON data (decoded from Geobuf)
-        const decodedGeoJSON = JSON.parse(req.body.stringGeo);
-
-        // Encode the GeoJSON to Geobuf
-        const encodedData = geobuf.encode(decodedGeoJSON, new Pbf());
+        const encodedData = geobuf.encode(req.body.stringGeo, new Pbf());
+        const compressed= Buffer.from(encodedData).toString('base64')
 
         const addedFeatures = req.body.addedFeatures; // Assuming this is GeoJSON
 
@@ -483,7 +475,7 @@ updateMapBaseData = async (req, res) => {
         await mapPageToBeUpdated.save();
 
         const mapToBeUpdated = await Map.findById(mapPageToBeUpdated.map);
-        mapToBeUpdated.baseData = encodedData; // Storing the Geobuf-encoded data
+        mapToBeUpdated.baseData = compressed; // Storing the Geobuf-encoded data
         mapToBeUpdated.addedFeatures = addedFeatures; // Assuming these are in GeoJSON format
 
         await mapToBeUpdated.save();
