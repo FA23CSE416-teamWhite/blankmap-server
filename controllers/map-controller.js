@@ -398,6 +398,9 @@ searchMapPages = async (req, res) => {
         // If q is null or empty, return all maps
         if (!qExtract || qExtract.trim() === "") {
             maps = await MapPage.find().populate('owner', 'userName').sort({ creationDate: -1 });
+            let publicMaps = maps.filter(map => map.isPublic)
+            console.log(maps)
+            console.log(publicMaps)
             // console.log('No search query');
         } else {
             // Perform a case-insensitive search on the title, description, and author.userName fields
