@@ -5,6 +5,8 @@ const MapPage = require('../models/mappage-model');
 const mongoose = require('mongoose');
 const { search } = require('../routes/map-router');
 const temp_map = 'https://datavizcatalogue.com/methods/images/top_images/choropleth.png';
+const Pbf = require('pbf');
+const geobuf = require('geobuf');
 
 
 createMap = async (req, res) => {
@@ -31,9 +33,10 @@ createMap = async (req, res) => {
         console.log("Parsing File Content")
         const fileContent = JSON.parse(file);
         console.log("fileContent: " + fileContent);
+        const encodedData = geobuf.encode(fileContent, new Pbf());
         const mapData = new Map({
             addedFeatures: [],
-            baseData: fileContent,
+            baseData: encodedData,
             mapType: selectedCategory 
         });
         console.log("Saving Map")
@@ -162,13 +165,15 @@ getMapPagePairs = async (req, res) => {
         const idNamePairs = await Promise.all(mappages.map(async page => {
             const mapData = await Map.findById(page.map); // Fetch map data using the ID stored in MapPage
             let jsonData=null;
-            if(mapData!=null){
+            if (mapData) {
+                // Assuming mapData.baseData contains the Geobuf data
+                const bufferString = mapData.baseData.toString('base64'); // Convert to base64 string
+                const buffer = Buffer.from(bufferString, 'base64'); // Convert back to Buffer
+                const decodedData = geobuf.decode(new Pbf(buffer)); // Decode the Geobuf data
                 
-                const bufferString = mapData.baseData.toString('utf8');
-
-                // Parse string to JSON object
-                jsonData = JSON.parse(bufferString);}
-                // console.log(jsonData)
+                // Use decodedData as your GeoJSON
+                console.log(decodedData); // This is your GeoJSON
+              }
             return {
                 id: page._id,
                 title: page.title,
@@ -179,7 +184,7 @@ getMapPagePairs = async (req, res) => {
                 comments: page.comments,
                 owner: user.userName,
                 mapSnapshot: page.imageURL,
-                map: jsonData,
+                map: decodedData,
                 lastModified: page.lastModified.toLocaleDateString(),
                 description: page.description,
                 creationDate: page.creationDate.toLocaleDateString(),
@@ -360,12 +365,21 @@ updateMapPage = async (req, res) => {
                 message: 'User not authorized to update this MapPage',
             });
         }
+        if (body.map) {
+            const bufferString = body.map.toString('base64'); // Assuming it's encoded as base64
+            const buffer = Buffer.from(bufferString, 'base64');
+            const decodedData = geobuf.decode(new Pbf(buffer));
+            // Now `decodedData` contains the GeoJSON representation of the map
+            // You can proceed to use this data as needed
+            mappage.map = decodedData;
+        }
+
 
         // Update MapPage properties
         mappage.comments = body.comments;
         mappage.description = body.description;
         mappage.lastModified = body.lastModified;
-        mappage.map = body.map;
+        // mappage.map = body.map;
         mappage.publicStatus = body.publicStatus;
         mappage.tags = body.tags;
         mappage.title = body.title;
@@ -452,25 +466,28 @@ updateMapBaseData = async (req, res) => {
         }
         const { id } = req.params;
         if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No map with id: ${id}`);
-        const baseData = req.body.stringGeo;
-        const addedFeatures = req.body.addedFeatures;
-        const imageURL=req.body.savedImage;
-        // console.log("addedFeatures: " + addedFeatures);
-        // console.log("test:"+addedFeatures.color)
+
+        // Assuming req.body.stringGeo contains GeoJSON data (decoded from Geobuf)
+        const decodedGeoJSON = JSON.parse(req.body.stringGeo);
+
+        // Encode the GeoJSON to Geobuf
+        const encodedData = geobuf.encode(decodedGeoJSON, new Pbf());
+
+        const addedFeatures = req.body.addedFeatures; // Assuming this is GeoJSON
+
+        const imageURL = req.body.savedImage;
+
         const mapPageToBeUpdated = await MapPage.findById(id);
-        mapPageToBeUpdated.imageURL=imageURL;
+        mapPageToBeUpdated.imageURL = imageURL;
         await mapPageToBeUpdated.save();
+
         const mapToBeUpdated = await Map.findById(mapPageToBeUpdated.map);
-        mapToBeUpdated.baseData = baseData;
-        if (addedFeatures.length === 0){
-            console.log("addedFeatures: " + addedFeatures)
-            mapToBeUpdated.addedFeatures = addedFeatures
-        }
-        else{
-            mapToBeUpdated.addedFeatures = [addedFeatures];
-        }
+        mapToBeUpdated.baseData = encodedData; // Storing the Geobuf-encoded data
+        mapToBeUpdated.addedFeatures = addedFeatures; // Assuming these are in GeoJSON format
+
         await mapToBeUpdated.save();
         await mapPageToBeUpdated.populate('map');
+
         res.json(mapPageToBeUpdated);
     } catch (error) {
         console.error(error);
