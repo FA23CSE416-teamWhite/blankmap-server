@@ -2,6 +2,8 @@ const express = require('express')
 const cors = require('cors')
 const dotenv = require('dotenv')
 const cookieParser = require('cookie-parser')
+const { createProxyMiddleware } = require('http-proxy-middleware');
+
 
 dotenv.config()
 const PORT = process.env.PORT || 8000;
@@ -10,6 +12,20 @@ const app = express();
 require('./db/database');
 app.use(express.json({ limit: '1000mb' })); 
 // app.use(bodyParser.json());
+app.use('/proxy', createProxyMiddleware({
+  target: 'https://c.tile.openstreetmap.org', // Target URL
+  changeOrigin: true,
+  pathRewrite: {
+      '^/proxy': '', // Remove '/proxy' from the URL
+  },
+  onProxyReq: (proxyReq) => {
+      // Optionally, modify headers if needed
+      proxyReq.setHeader('Referer', 'http://yourwebsite.com');
+  },
+}));
+
+// Serve your frontend files (assuming they are in a 'build' directory)
+app.use(express.static('build'));
 app.use(cors({
   origin: ['http://localhost:3000', 'https://blank-map-client.web.app','https://blankmap-front-1626f242c2d7.herokuapp.com'],
   // methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', 
