@@ -403,6 +403,7 @@ searchMapPages = async (req, res) => {
         } else {
             // Perform a case-insensitive search on the title, description, and author.userName fields
             maps = await MapPage.find().populate('owner', 'userName');
+            maps = maps.filter(map => map.publicStatus)
             maps = maps.filter(map =>
                 map.title.toLowerCase().includes(qExtract.toLowerCase()) ||
                 map.description.toLowerCase().includes(qExtract.toLowerCase()) ||
