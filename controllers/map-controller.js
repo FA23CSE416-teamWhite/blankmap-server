@@ -265,7 +265,6 @@ getMapPageById = async (req, res) => {
         const buffer = Buffer.from(mappage.map.baseData, 'base64'); // Convert back to Buffer
         const decodedData = geobuf.decode(new Pbf(buffer)); // Decode the Geobuf data
         mappage.map.baseData=decodedData;
-        console.log(mappage.map.baseData)
         // console.log("Found mappage: " + JSON.stringify(mappage));
 
         // Check if the Mappage belongs to this user
