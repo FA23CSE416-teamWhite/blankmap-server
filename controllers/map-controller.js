@@ -22,7 +22,7 @@ createMap = async (req, res) => {
         }
         console.log("Check missing fields")
         // Check for missing fields
-        if (!title || !description || !publicStatus || !tags || !selectedCategory || !file) {
+        if (!title || !description || !tags || !selectedCategory || !file) {
             return res.status(400).json({
                 success: false,
                 error: 'Invalid input. Please provide all required fields.',
