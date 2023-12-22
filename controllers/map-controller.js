@@ -360,18 +360,22 @@ updateMapPage = async (req, res) => {
                 message: 'User not authorized to update this MapPage',
             });
         }
+        const mapToBeUpdated = await Map.findById(mappage.map);
+        mapToBeUpdated.mapType = body.map.mapType;
+        // mapToBeUpdated.baseData = body.map.baseData;
+        
 
         // Update MapPage properties
         mappage.comments = body.comments;
         mappage.description = body.description;
         mappage.lastModified = body.lastModified;
-        mappage.map = body.map;
+        // mappage.map = body.map;
         mappage.publicStatus = body.publicStatus;
         mappage.tags = body.tags;
         mappage.title = body.title;
         mappage.upvotes = body.upvotes;
         mappage.downvotes = body.downvotes;
-        
+        await mapToBeUpdated.save();
         const updatedMappage = await mappage.save();
 
         console.log("SUCCESS!!!");
